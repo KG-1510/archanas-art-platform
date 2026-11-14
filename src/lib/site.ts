@@ -1,11 +1,22 @@
 // Brand facts. Mirrors docs/BRAND.md.
+
+/** The live address. Used for link previews, the sitemap, llms.txt and structured data. */
+export const PRODUCTION_URL = "https://archanasart.in";
+
+// NEXT_PUBLIC_SITE_URL overrides this (for a preview deployment, say). Otherwise
+// production builds use the live domain and local development uses localhost.
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.NODE_ENV === "production" ? PRODUCTION_URL : "http://localhost:3000")
+).replace(/\/$/, "");
+
 export const site = {
   name: "Archana's Art",
   artist: "Dr. Archana Gupta",
   tagline: "Original paintings and art classes in Bengaluru",
   description:
     "Archana's Art is the studio of Dr. Archana Gupta in Bengaluru: original one-off paintings to buy, and classes, workshops and demos across art forms, drawing on 40+ years of teaching and creating.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
+  url: siteUrl,
   phoneDisplay: "+91 89716 85880",
   phoneE164: "+918971685880",
   whatsappNumber: "918971685880",

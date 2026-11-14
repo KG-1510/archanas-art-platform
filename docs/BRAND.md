@@ -26,6 +26,8 @@ Source of truth for brand facts used across the site. Update this file when deta
 
 ## Contact and social
 
+- **Website:** https://archanasart.in (domain registered with Hostinger)
+
 - **Mobile:** +91 8971685880
 - **WhatsApp:** same number. The site carries a "Chat on WhatsApp" call to action (`https://wa.me/918971685880`)
 - **Instagram:** https://www.instagram.com/archanasartspace/

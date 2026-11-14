@@ -35,7 +35,7 @@ Copy `.env.example` to `.env.local` and fill it in. Never commit `.env.local`.
 
 | Variable | What it is |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | The live address, e.g. `https://example.com`. Link previews and the sitemap depend on it |
+| `NEXT_PUBLIC_SITE_URL` | Optional override of the site address. Unset, production builds use `https://archanasart.in` (set in `src/lib/site.ts`) and local development uses localhost |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | From sanity.io/manage |
 | `NEXT_PUBLIC_SANITY_DATASET` | Usually `production` |
 | `SANITY_API_WRITE_TOKEN` | Editor token. Server only. Saves orders and marks paintings sold |
@@ -113,12 +113,23 @@ src/lib/                 content queries, seed data, orders, metadata
 src/sanity/              Sanity clients and schema
 ```
 
+## Deploy (Vercel + archanasart.in)
+
+1. Push this repository to GitHub as a **private** repo.
+2. In Vercel, choose **Add New → Project** and import the repo. The defaults for Next.js are correct.
+3. Under **Settings → Environment Variables**, add everything from `.env.example` except `NEXT_PUBLIC_SITE_URL`. Use live Razorpay keys only after a test purchase works.
+4. Under **Settings → Domains**, add `archanasart.in` and `www.archanasart.in`. Vercel shows the DNS records it needs.
+5. In Hostinger, open the domain's DNS zone and enter exactly the records Vercel shows (an A record for the root and a CNAME for `www`). Remove any parked or default records for the same names.
+6. In Razorpay, point the webhook at `https://archanasart.in/api/razorpay/webhook`.
+
+`https://archanasart.in` is already an allowed CORS origin in the Sanity project, so `/studio` works on the live site.
+
 ## Before launch
 
 - Replace sample artworks and placeholder images with real content.
 - Set real courier charges in Site settings.
 - Have the privacy, terms and shipping pages reviewed. They are drafts.
-- Set `NEXT_PUBLIC_SITE_URL` to the live address.
+- Point the `archanasart.in` DNS at the host and add `https://archanasart.in` as a CORS origin in Sanity.
 - Run a full test purchase with Razorpay test keys.
 
 ## Scripts
