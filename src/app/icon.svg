@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#6E1F28"/>
+  <!-- Serif capital A, drawn as shapes so it looks the same everywhere -->
+  <g fill="#FAF7F2">
+    <path d="M30.6 11h3.2l13.4 36.2c.6 1.6 1.5 2.3 3.3 2.5V52H36.800v-2.300c2.300-.2 2.900-.9 2.300-2.700L36.600 40H24.300l-2.200 6.600c-.7 2.100.1 2.900 2.800 3.100V52H13.500v-2.300c2-.3 3-1.100 3.800-3.200L30.600 11Zm-.1 9.800L25.400 36.800h10.100L30.500 20.800Z"/>
+  </g>
+</svg>

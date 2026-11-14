@@ -1,0 +1,13 @@
+const inr = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+export function formatINR(amount: number) {
+  return inr.format(amount);
+}
+
+export function formatSize(widthIn: number, heightIn: number) {
+  return `${widthIn} × ${heightIn} in`;
+}

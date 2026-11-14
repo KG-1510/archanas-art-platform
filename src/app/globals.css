@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* Ivory & Oxblood. See docs/BRAND.md. */
+@theme {
+  --color-ivory: #faf7f2;
+  --color-surface: #f0eae0;
+  --color-ink: #1f1a17;
+  --color-muted: #4d4540;
+  --color-oxblood: #6e1f28;
+  --color-oxblood-deep: #571820;
+  --color-brass: #b08d57;
+  --color-brass-deep: #6f5426; /* brass dark enough for small text on ivory */
+  --color-line: #ddd3c5;
+
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jost), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-oxblood);
+    color: var(--color-ivory);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-oxblood);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  }
+  .eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brass-deep);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 1.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-oxblood);
+    background: var(--color-oxblood);
+    color: var(--color-ivory);
+    transition: background-color 0.4s var(--ease-luxe), color 0.4s var(--ease-luxe), border-color 0.4s var(--ease-luxe);
+  }
+  .btn:hover {
+    background: var(--color-oxblood-deep);
+    border-color: var(--color-oxblood-deep);
+  }
+  .btn[aria-disabled="true"], .btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .btn-ghost:hover {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-ivory);
+  }
+  .link-line {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-oxblood);
+    background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+    padding-bottom: 0.35rem;
+    transition: background-size 0.5s var(--ease-luxe);
+  }
+  .link-line:hover {
+    background-size: 40% 1px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .field > span {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .field input, .field select, .field textarea {
+    font: inherit;
+    font-weight: 400;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.55rem 0;
+    color: var(--color-ink);
+    border-radius: 0;
+    transition: border-color 0.3s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--color-oxblood);
+  }
+}
+
+/* Hero entrance: pure CSS so the page never flashes before scripts load. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(1.5rem); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes unveil {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.rise { animation: rise 1.1s var(--ease-luxe) both; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.24s; }
+.rise-4 { animation-delay: 0.36s; }
+.unveil { animation: unveil 1.4s var(--ease-luxe) 0.2s both; }
+
+/* Placeholder "paintings" until real photographs are added in Sanity. */
+.art-a { background:
+  radial-gradient(60% 45% at 30% 28%, var(--color-brass) 0 38%, transparent 70%),
+  radial-gradient(55% 50% at 72% 68%, var(--color-oxblood) 0 45%, transparent 75%),
+  linear-gradient(160deg, var(--color-ivory), var(--color-surface)); }
+.art-b { background:
+  linear-gradient(0deg, var(--color-oxblood) 0 34%, transparent 34%),
+  radial-gradient(38% 38% at 62% 36%, var(--color-brass) 0 60%, transparent 62%),
+  var(--color-surface); }
+.art-c { background:
+  repeating-linear-gradient(100deg, transparent 0 18px, rgb(31 26 23 / 0.16) 18px 20px),
+  radial-gradient(70% 60% at 40% 60%, var(--color-oxblood), var(--color-brass) 70%, var(--color-surface)); }
+.art-d { background:
+  repeating-radial-gradient(circle at 50% 50%, var(--color-oxblood) 0 2px, transparent 2px 14px),
+  radial-gradient(circle at 50% 50%, var(--color-brass) 0 22%, var(--color-surface) 60%); }
+.art-e { background:
+  radial-gradient(30% 22% at 58% 30%, var(--color-ivory) 0 60%, transparent 62%),
+  linear-gradient(200deg, var(--color-ink) 0 45%, var(--color-oxblood) 45% 70%, var(--color-brass) 70%); }
+.art-f { background:
+  linear-gradient(180deg, var(--color-brass) 0 30%, transparent 30%),
+  linear-gradient(90deg, transparent 0 46%, var(--color-ink) 46% 48%, transparent 48%),
+  linear-gradient(180deg, transparent 0 62%, var(--color-oxblood) 62%),
+  var(--color-surface); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise, .unveil { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
