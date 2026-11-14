@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Effect121 } from "@/components/mwg/Effect121";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
 import { pageMeta } from "@/lib/meta";
@@ -10,58 +11,71 @@ export const metadata = pageMeta(
   `${site.artist} has spent 40+ years teaching and creating art across forms. Archana's Art is her studio in Bengaluru.`,
 );
 
+// Photographs to be added: each `.img` block is a painted placeholder for now.
+const placeholder = (variant: string, label: string) => <div role="img" aria-label={label} className={`img ${variant}`} />;
+
 export default function AboutPage() {
   return (
     <>
-      <PageIntro eyebrow="About" title={`${site.artist}, artist and teacher`}>
-        <p>More than forty years of teaching and creating, across every art form she could learn.</p>
-      </PageIntro>
+      {/* Made With GSAP effect 121, clipped sections gallery */}
+      <Effect121
+        hero={
+          <PageIntro eyebrow="About" title={`${site.artist}, artist and teacher`}>
+            <p>More than forty years of teaching and creating, across every art form she could learn.</p>
+          </PageIntro>
+        }
+        sections={[
+          {
+            title: "A life in the studio",
+            text: (
+              <p>
+                Archana&rsquo;s Art is run by {site.artist}. For over four decades she has been doing two things side
+                by side: making her own work, and teaching others to make theirs.
+              </p>
+            ),
+            media: placeholder("art-e", "Dr. Archana Gupta in her studio (photograph to be added)"),
+          },
+          {
+            title: "All art forms, one roof",
+            text: (
+              <p>
+                The studio is not built around a single medium. Painting, mandala, Nippon art and more are taught and
+                practised here, so a student can move between forms without changing teachers.
+              </p>
+            ),
+            media: placeholder("art-d", "Students' work across art forms (photograph to be added)"),
+          },
+          {
+            title: "Where to find her",
+            text: (
+              <>
+                <p>
+                  Classes run at the art studio and at her residence at {site.address.line1}, {site.address.line2},{" "}
+                  {site.address.city}.
+                </p>
+                <p className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+                  <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line">
+                    Studio map
+                  </a>
+                  <a href={site.maps.residence} target="_blank" rel="noopener noreferrer" className="link-line">
+                    Residence map
+                  </a>
+                </p>
+              </>
+            ),
+            media: placeholder("art-a", "The art studio in Bengaluru (photograph to be added)"),
+          },
+        ]}
+      />
 
-      <section className="shell grid gap-14 pb-24 md:grid-cols-[0.9fr_1.1fr] md:pb-32">
-        <Reveal>
-          <div className="border border-line bg-surface p-4">
-            <div role="img" aria-label="Portrait of Dr. Archana Gupta (photograph to be added)" className="art-e aspect-[4/5]" />
-          </div>
-        </Reveal>
-
-        <Reveal stagger className="flex flex-col gap-10">
-          <div>
-            <h2 className="text-4xl">A life in the studio</h2>
-            <p className="mt-4 text-muted">
-              Archana&rsquo;s Art is run by {site.artist}. For over four decades she has been doing two things side by
-              side: making her own work, and teaching others to make theirs.
-            </p>
-          </div>
-          <div>
-            <h2 className="text-4xl">All art forms, one roof</h2>
-            <p className="mt-4 text-muted">
-              The studio is not built around a single medium. Painting, mandala, Nippon art and more are taught and
-              practised here, so a student can move between forms without changing teachers.
-            </p>
-          </div>
-          <div>
-            <h2 className="text-4xl">Where to find her</h2>
-            <p className="mt-4 text-muted">
-              Classes run at the art studio and at her residence at {site.address.line1}, {site.address.line2},{" "}
-              {site.address.city}.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
-              <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line">
-                Art studio map
-              </a>
-              <a href={site.maps.residence} target="_blank" rel="noopener noreferrer" className="link-line">
-                Residence map
-              </a>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-4 border-t border-line pt-10">
-            <Link href="/shop" className="btn">
-              See her paintings
-            </Link>
-            <Link href="/services" className="btn btn-ghost">
-              Learn with her
-            </Link>
-          </div>
+      <section className="shell pt-10 pb-24 md:pb-32">
+        <Reveal className="flex flex-wrap justify-center gap-4 border-t border-line pt-14">
+          <Link href="/shop" className="btn">
+            See her paintings
+          </Link>
+          <Link href="/services" className="btn btn-ghost">
+            Learn with her
+          </Link>
         </Reveal>
       </section>
     </>

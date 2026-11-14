@@ -175,6 +175,117 @@
   linear-gradient(180deg, transparent 0 62%, var(--color-oxblood) 62%),
   var(--color-surface); }
 
+/* ------------------------------------------------------------------
+   Made With GSAP effects (licensed, madewithgsap.com). Structural rules
+   are theirs; type, colour and the small-screen / no-motion fallbacks
+   are ours. `.is-live` is added by the component once the effect runs.
+   ------------------------------------------------------------------ */
+
+/* 122 Scaling image parade · 123 Parting letters parade */
+.mwg_effect122 .pin-height { height: 400vh; height: 400svh; }
+.mwg_effect123 .pin-height { height: 600vh; height: 600svh; }
+.mwg_effect122 .container,
+.mwg_effect123 .container {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.mwg_effect122 .medias,
+.mwg_effect123 .medias { position: absolute; inset: 0; }
+.mwg_effect122 .media,
+.mwg_effect123 .media {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: auto;
+  will-change: transform;
+}
+.mwg_effect122 .media { width: 14vw; }
+.mwg_effect123 .media { width: 12vw; }
+.mwg_effect122 div.media,
+.mwg_effect123 div.media { aspect-ratio: 4 / 5; }
+.mwg_effect123 .char { display: inline-block; }
+.mwg_effect123 .title { text-align: center; padding-inline: 1.25rem; }
+.mwg_effect123 .line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 6.4vw, 6.5rem);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.mwg_effect122 { background: var(--color-surface); }
+@media (max-width: 767px) {
+  .mwg_effect122 .media { width: 34vw; }
+  .mwg_effect123 .media { width: 26vw; }
+}
+/* Without the script (no JS, or reduced motion): a calm static row. */
+.mwg_effect122:not(.is-live) .pin-height,
+.mwg_effect123:not(.is-live) .pin-height { height: auto; }
+.mwg_effect122:not(.is-live) .container,
+.mwg_effect123:not(.is-live) .container { height: auto; padding-block: 5rem; gap: 2.5rem; }
+.mwg_effect122:not(.is-live) .medias,
+.mwg_effect123:not(.is-live) .medias { position: static; display: flex; justify-content: center; gap: 2vw; }
+.mwg_effect122:not(.is-live) .media,
+.mwg_effect123:not(.is-live) .media { position: static; }
+.mwg_effect122:not(.is-live) .media:nth-child(n + 6),
+.mwg_effect123:not(.is-live) .media:nth-child(n + 6) { display: none; }
+
+/* 121 Clipped sections gallery */
+.mwg_effect121 .section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3.5rem);
+}
+.mwg_effect121 .text-left { display: flex; align-items: baseline; gap: 0.6rem; }
+.mwg_effect121 .number { font-family: var(--font-display); font-size: 1.5rem; color: var(--color-brass-deep); }
+.mwg_effect121 .text { font-size: clamp(1.9rem, 2.6vw, 2.75rem); }
+/* text-left / text-right are also Tailwind utilities, so alignment is pinned here. */
+.mwg_effect121 .text-left,
+.mwg_effect121 .text-right { text-align: left; }
+.mwg_effect121 .text-right { color: var(--color-muted); }
+.mwg_effect121 .media { overflow: hidden; height: 62vh; border-radius: 1vw; }
+.mwg_effect121 .media img,
+.mwg_effect121 .media .img {
+  width: 100%;
+  height: calc(100% + 200px);
+  object-fit: cover;
+  display: block;
+}
+@media (min-width: 768px) {
+  .mwg_effect121.is-live .section {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    display: block;
+    padding: 6vh 0;
+  }
+  .mwg_effect121.is-live .content {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+    pointer-events: none;
+  }
+  .mwg_effect121.is-live .content a { pointer-events: auto; }
+  .mwg_effect121.is-live .text-left { width: 23vw; }
+  .mwg_effect121.is-live .text-right { width: 21vw; }
+  .mwg_effect121.is-live .media {
+    width: 40vw;
+    height: 88vh;
+    margin-inline: auto;
+    border-radius: 0;
+    clip-path: inset(0% 15% 0% 15% round 1vw);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .rise, .unveil { animation: none; }

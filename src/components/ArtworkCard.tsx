@@ -5,7 +5,7 @@ import type { Artwork } from "@/lib/types";
 
 const VARIANTS = ["art-a", "art-b", "art-c", "art-d", "art-e", "art-f"];
 
-function variantFor(id: string) {
+export function variantFor(id: string) {
   let h = 0;
   for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return VARIANTS[h % VARIANTS.length];

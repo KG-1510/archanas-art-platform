@@ -2,7 +2,9 @@ import { EnquiryForm } from "@/components/EnquiryForm";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
-import { getServices } from "@/lib/content";
+import { Effect122 } from "@/components/mwg/Effect122";
+import { ParadeMedia } from "@/components/mwg/ParadeMedia";
+import { getArtworks, getServices } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 import { site } from "@/lib/site";
 
@@ -13,7 +15,7 @@ export const metadata = pageMeta(
 );
 
 export default async function ServicesPage() {
-  const services = await getServices();
+  const [services, artworks] = await Promise.all([getServices(), getArtworks()]);
 
   return (
     <>
@@ -44,7 +46,12 @@ export default async function ServicesPage() {
         ))}
       </section>
 
-      <section aria-labelledby="enquire-title" className="bg-surface">
+      {/* Made With GSAP effect 122, scaling image parade */}
+      <Effect122>
+        <ParadeMedia artworks={artworks.slice(0, 8)} />
+      </Effect122>
+
+      <section aria-labelledby="enquire-title" className="border-t border-line bg-surface">
         <div className="shell grid gap-12 py-24 md:grid-cols-2 md:py-28">
           <Reveal>
             <p className="eyebrow">Enquire</p>

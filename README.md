@@ -12,7 +12,7 @@ Brand facts, palette and fonts live in [docs/BRAND.md](docs/BRAND.md).
 | Styling | Tailwind CSS 4. Tokens in `src/app/globals.css` |
 | Content | Sanity. Studio is embedded at `/studio` |
 | Payments | Razorpay (guest checkout, INR) |
-| Animation | GSAP + ScrollTrigger (`src/components/Reveal.tsx`) |
+| Animation | GSAP + ScrollTrigger and SplitText (`src/components/Reveal.tsx`, `src/components/mwg/`) |
 | Fonts | Cormorant Garamond (headings) and Jost (body), via `next/font` |
 
 ## Run it
@@ -84,6 +84,20 @@ Prices never come from the browser. Order documents have IDs starting with `orde
 - **Structured data**: schema.org JSON-LD for the studio, services and each artwork.
 - **Link previews**: Open Graph and Twitter tags on every page, with a preview image (`public/og.jpg`). Paintings use their own photograph.
 
+## Motion and the Made With GSAP licence
+
+Three effects come from [Made With GSAP](https://madewithgsap.com) and use its licensed code, in `src/components/mwg/` with their styles at the end of `src/app/globals.css`:
+
+| Effect | Where |
+| --- | --- |
+| 123, Parting letters parade | Homepage, "Forty years" statement |
+| 121, Clipped sections gallery | About page |
+| 122, Scaling image parade | Services page |
+
+**This repository must stay private.** The Made With GSAP terms forbid publishing their code in a public or open-source repository. Do not make this repo public while `src/components/mwg/` is in it.
+
+Each effect switches itself off for people who prefer reduced motion and shows a static layout instead. Effect 121 runs on screens 768px and wider.
+
 ## Project layout
 
 ```
@@ -94,6 +108,7 @@ src/app/api/             catalogue, checkout and webhook routes
 src/app/md/              Markdown twin route
 src/app/studio/          embedded Sanity studio
 src/components/          UI, motion and WebMCP components
+src/components/mwg/      licensed Made With GSAP effects (keep repo private)
 src/lib/                 content queries, seed data, orders, metadata
 src/sanity/              Sanity clients and schema
 ```

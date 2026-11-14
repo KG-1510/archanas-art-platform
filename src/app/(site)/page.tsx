@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArtworkImage } from "@/components/ArtworkCard";
-import { formatINR, formatSize } from "@/lib/format";
-import { FocusList, GrowInline, HorizontalGallery, Parallax, Reveal } from "@/components/Reveal";
+import { ArtworkCard, ArtworkImage } from "@/components/ArtworkCard";
+import { Effect123 } from "@/components/mwg/Effect123";
+import { ParadeMedia } from "@/components/mwg/ParadeMedia";
+import { Parallax, Reveal } from "@/components/Reveal";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
 import { getArtworks, getFeaturedArtworks, getServices } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
@@ -17,7 +18,7 @@ const FACTS = [
 
 export default async function HomePage() {
   const [featured, all, services] = await Promise.all([getFeaturedArtworks(), getArtworks(), getServices()]);
-  const gallery = all.slice(0, 8);
+  const parade = all.slice(0, 6);
   const hero = featured[0];
 
   return (
@@ -71,38 +72,25 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Featured works: pinned horizontal gallery */}
-      <HorizontalGallery
-        label="New in the studio"
-        header={
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p className="eyebrow">From the marketplace</p>
-              <h2 className="mt-4 text-5xl md:text-6xl">New in the studio</h2>
-            </div>
-            <Link href="/shop" className="link-line">
-              View all works
-            </Link>
+      {/* Featured works */}
+      <section aria-labelledby="featured-title" className="shell py-24 md:py-32">
+        <Reveal className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="eyebrow">From the marketplace</p>
+            <h2 id="featured-title" className="mt-4 text-5xl md:text-6xl">
+              New in the studio
+            </h2>
           </div>
-        }
-      >
-        {gallery.map((a) => (
-          <li key={a._id} className="shrink-0">
-            <Link href={`/shop/${a.slug}`} className="group block">
-              <div className="border border-line bg-surface p-3 transition-colors duration-500 group-hover:border-brass">
-                <ArtworkImage artwork={a} sizes="40vh" className="aspect-[4/5] h-[42vh]" />
-              </div>
-              <h3 className="mt-5 text-2xl transition-colors duration-300 group-hover:text-oxblood">{a.title}</h3>
-              <p className="text-base text-muted">
-                {a.medium} · {formatSize(a.widthIn, a.heightIn)}
-              </p>
-              <p className="mt-1 font-medium tabular-nums">
-                {a.status === "sold" ? <span className="eyebrow">Sold</span> : formatINR(a.priceINR)}
-              </p>
-            </Link>
-          </li>
-        ))}
-      </HorizontalGallery>
+          <Link href="/shop" className="link-line">
+            View all works
+          </Link>
+        </Reveal>
+        <Reveal stagger className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((a) => (
+            <ArtworkCard key={a._id} artwork={a} />
+          ))}
+        </Reveal>
+      </section>
 
       {/* Services */}
       <section aria-labelledby="services-title" className="bg-surface">
@@ -119,7 +107,7 @@ export default async function HomePage() {
               See all services
             </Link>
           </Reveal>
-          <FocusList className="flex flex-col">
+          <Reveal as="ul" stagger className="flex flex-col">
             {services.map((s) => (
               <li key={s._id} className="border-t border-line last:border-b">
                 <Link href={`/services#${s.slug}`} className="group grid gap-2 py-7 md:grid-cols-[14rem_1fr] md:gap-8">
@@ -128,25 +116,23 @@ export default async function HomePage() {
                 </Link>
               </li>
             ))}
-          </FocusList>
+          </Reveal>
         </div>
       </section>
 
-      {/* About teaser */}
-      <section aria-labelledby="about-title" className="shell py-24 md:py-32">
-        <Reveal className="mx-auto max-w-4xl text-center">
-          <p className="eyebrow">The artist</p>
-          <h2 id="about-title" className="mt-6 text-4xl leading-[1.15] md:text-6xl">
-            {site.artist} has spent more than forty years
-            <GrowInline className="mx-[0.25em] inline-block h-[0.82em] w-[1.5em] overflow-hidden rounded-full align-baseline">
-              <span className="art-a block h-full w-[1.5em]" />
-            </GrowInline>
-            teaching and creating art in every form she could learn.
-          </h2>
-          <Link href="/about" className="link-line mt-10 inline-block">
+      {/* About teaser: Made With GSAP effect 123, parting letters parade */}
+      <section aria-label="The artist">
+        <Effect123 lines={["Forty years of teaching", "and creating, by hand"]}>
+          <ParadeMedia artworks={parade} />
+        </Effect123>
+        <div className="shell flex flex-col items-center gap-6 pb-24 text-center">
+          <p className="max-w-2xl text-lg text-muted">
+            {site.artist} has spent more than forty years teaching and creating art in every form she could learn.
+          </p>
+          <Link href="/about" className="link-line">
             Read her story
           </Link>
-        </Reveal>
+        </div>
       </section>
 
       {/* Contact band */}
