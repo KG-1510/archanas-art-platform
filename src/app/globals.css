@@ -151,30 +151,6 @@
 .rise-4 { animation-delay: 0.36s; }
 .unveil { animation: unveil 1.4s var(--ease-luxe) 0.2s both; }
 
-/* Placeholder "paintings" until real photographs are added in Sanity. */
-.art-a { background:
-  radial-gradient(60% 45% at 30% 28%, var(--color-brass) 0 38%, transparent 70%),
-  radial-gradient(55% 50% at 72% 68%, var(--color-oxblood) 0 45%, transparent 75%),
-  linear-gradient(160deg, var(--color-ivory), var(--color-surface)); }
-.art-b { background:
-  linear-gradient(0deg, var(--color-oxblood) 0 34%, transparent 34%),
-  radial-gradient(38% 38% at 62% 36%, var(--color-brass) 0 60%, transparent 62%),
-  var(--color-surface); }
-.art-c { background:
-  repeating-linear-gradient(100deg, transparent 0 18px, rgb(31 26 23 / 0.16) 18px 20px),
-  radial-gradient(70% 60% at 40% 60%, var(--color-oxblood), var(--color-brass) 70%, var(--color-surface)); }
-.art-d { background:
-  repeating-radial-gradient(circle at 50% 50%, var(--color-oxblood) 0 2px, transparent 2px 14px),
-  radial-gradient(circle at 50% 50%, var(--color-brass) 0 22%, var(--color-surface) 60%); }
-.art-e { background:
-  radial-gradient(30% 22% at 58% 30%, var(--color-ivory) 0 60%, transparent 62%),
-  linear-gradient(200deg, var(--color-ink) 0 45%, var(--color-oxblood) 45% 70%, var(--color-brass) 70%); }
-.art-f { background:
-  linear-gradient(180deg, var(--color-brass) 0 30%, transparent 30%),
-  linear-gradient(90deg, transparent 0 46%, var(--color-ink) 46% 48%, transparent 48%),
-  linear-gradient(180deg, transparent 0 62%, var(--color-oxblood) 62%),
-  var(--color-surface); }
-
 /* ------------------------------------------------------------------
    Made With GSAP effects (licensed, madewithgsap.com). Structural rules
    are theirs; type, colour and the small-screen / no-motion fallbacks
@@ -205,8 +181,6 @@
 }
 .mwg_effect122 .media { width: 14vw; }
 .mwg_effect123 .media { width: 12vw; }
-.mwg_effect122 div.media,
-.mwg_effect123 div.media { aspect-ratio: 4 / 5; }
 .mwg_effect123 .char { display: inline-block; }
 .mwg_effect123 .title { text-align: center; padding-inline: 1.25rem; }
 .mwg_effect123 .line {
@@ -249,8 +223,7 @@
 .mwg_effect121 .text-right { text-align: left; }
 .mwg_effect121 .text-right { color: var(--color-muted); }
 .mwg_effect121 .media { overflow: hidden; height: 62vh; border-radius: 1vw; }
-.mwg_effect121 .media img,
-.mwg_effect121 .media .img {
+.mwg_effect121 .media img {
   width: 100%;
   height: calc(100% + 200px);
   object-fit: cover;

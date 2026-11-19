@@ -54,6 +54,36 @@ Copy `.env.example` to `.env.local` and fill it in. Never commit `.env.local`.
    - **Site settings**: courier charges for India and international.
    - **Order**: written by the website. Read-only.
 
+### What is managed in Sanity
+
+| In the studio sidebar | What it controls on the site |
+| --- | --- |
+| **Paintings** | The marketplace, painting pages and the homepage's featured works |
+| **Workshops & classes** | "Upcoming workshops and classes" on the Services page. Past ones drop off on their own |
+| **Testimonials** | Quotes on the homepage (up to three) |
+| **Services text** | The Services page. Built-in text is used until you add your own |
+| **Policy pages** | Privacy, Terms, Shipping & Returns. Built-in text is used until you add your own |
+| **Site settings** | Courier charges, and the three About page photos |
+| **Orders** | Written by the website. Read-only |
+
+There is no sample content. A section with nothing in Sanity is left off the site; the marketplace shows a short "new works are being added" note.
+
+### Adding a painting
+
+Open `/studio` → **Paintings** → **All paintings** → the **+** button. The form has three tabs:
+
+| Tab | Fill in |
+| --- | --- |
+| Painting | Photo (required), more photos, painting name, web address (press Generate), description, medium, art form, year |
+| Size | Sheet width and height in inches, framed or unframed, and the size with frame if framed. The site shows centimetres automatically |
+| Price & stock | Price of the original, stock available (usually 1), price of a print, about the print, "Show on the homepage", your own reference number |
+
+A painting needs at least one price. Press **Publish**; it appears on the site within about a minute.
+
+- **Original:** when someone buys it on the site, stock goes down by one. At 0 the page shows "Original sold".
+- **Print:** no stock limit. Prints stay on sale after the original is sold.
+- To add an art form, edit `ART_FORMS` in `src/sanity/schemaTypes/index.ts`.
+
 ### Razorpay
 
 1. Add the key ID and secret to `.env.local`. Use test keys first.
@@ -62,12 +92,12 @@ Copy `.env.example` to `.env.local` and fill it in. Never commit `.env.local`.
 
 ## How buying works
 
-Each painting is a one-off, so it can be sold only once.
+A painting can be bought as the original (sold once, tracked by stock) or as a print (no stock limit).
 
 1. The buyer fills in delivery details on `/checkout/<painting>`.
-2. `POST /api/checkout/order` re-reads the price and availability from Sanity, adds the courier charge, holds the painting for 15 minutes, creates a Razorpay order and saves a pending order.
+2. `POST /api/checkout/order` re-reads the price and stock from Sanity, adds the courier charge, holds an original for 15 minutes, creates a Razorpay order and saves a pending order.
 3. Razorpay Checkout takes the payment.
-4. `POST /api/checkout/verify` checks Razorpay's signature, then marks the order paid and the painting sold. The webhook does the same if the buyer closes the tab early.
+4. `POST /api/checkout/verify` checks Razorpay's signature, then marks the order paid and, for an original, takes one out of stock. The webhook does the same if the buyer closes the tab early.
 
 Prices never come from the browser. Order documents have IDs starting with `order.`, which keeps them private in Sanity.
 
@@ -126,7 +156,7 @@ src/sanity/              Sanity clients and schema
 
 ## Before launch
 
-- Replace sample artworks and placeholder images with real content.
+- Add paintings, courier charges and About page photos in Sanity.
 - Set real courier charges in Site settings.
 - Have the privacy, terms and shipping pages reviewed. They are drafts.
 - Point the `archanasart.in` DNS at the host and add `https://archanasart.in` as a CORS origin in Sanity.

@@ -4,7 +4,7 @@ import { Effect123 } from "@/components/mwg/Effect123";
 import { ParadeMedia } from "@/components/mwg/ParadeMedia";
 import { Parallax, Reveal } from "@/components/Reveal";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
-import { getArtworks, getFeaturedArtworks, getServices } from "@/lib/content";
+import { getArtworks, getFeaturedArtworks, getServices, getTestimonials } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 import { site, whatsappLink } from "@/lib/site";
 
@@ -12,26 +12,35 @@ export const metadata = pageMeta("/", undefined, site.description);
 
 const FACTS = [
   { value: "40+", label: "Years teaching and creating" },
-  { value: "1 of 1", label: "Every painting is an original" },
+  { value: "Originals", label: "And selected works as prints" },
   { value: "Worldwide", label: "Couriered in India and abroad" },
 ];
 
 export default async function HomePage() {
-  const [featured, all, services] = await Promise.all([getFeaturedArtworks(), getArtworks(), getServices()]);
-  const parade = all.slice(0, 6);
-  const hero = featured[0];
+  const [featured, all, services, testimonials] = await Promise.all([
+    getFeaturedArtworks(),
+    getArtworks(),
+    getServices(),
+    getTestimonials(),
+  ]);
+  // Sections that depend on paintings are left out until real paintings exist.
+  const parade = all.filter((a) => a.imageUrl).slice(0, 6);
+  const hero = featured.find((a) => a.imageUrl);
 
   return (
     <>
       {/* Hero */}
-      <section aria-labelledby="hero-title" className="shell grid items-center gap-12 pt-12 pb-20 md:grid-cols-[1.15fr_0.85fr] md:gap-16 md:pt-20 md:pb-28">
+      <section
+        aria-labelledby="hero-title"
+        className={`shell grid items-center gap-12 pt-12 pb-20 md:gap-16 md:pt-20 md:pb-28 ${hero ? "md:grid-cols-[1.15fr_0.85fr]" : ""}`}
+      >
         <div>
           <p className="eyebrow rise">The studio of {site.artist} · Bengaluru</p>
           <h1 id="hero-title" className="rise rise-2 mt-6 text-[clamp(2.9rem,7.4vw,6.4rem)] leading-[1.02]">
             Art made <em className="text-oxblood">slowly</em>, by hand, for forty years.
           </h1>
           <p className="rise rise-3 mt-8 max-w-xl text-lg text-muted">
-            Original paintings to live with, and classes, workshops and demos across art forms. All under one roof.
+            Paintings to live with, as originals and prints, and classes, workshops and demos across art forms. All under one roof.
           </p>
           <div className="rise rise-4 mt-10 flex flex-wrap gap-4">
             <Link href="/shop" className="btn">
@@ -72,7 +81,8 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Featured works */}
+      {/* Featured works: shown once there are paintings in Sanity */}
+      {featured.length ? (
       <section aria-labelledby="featured-title" className="shell py-24 md:py-32">
         <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -91,6 +101,7 @@ export default async function HomePage() {
           ))}
         </Reveal>
       </section>
+      ) : null}
 
       {/* Services */}
       <section aria-labelledby="services-title" className="bg-surface">
@@ -120,12 +131,19 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* About teaser: Made With GSAP effect 123, parting letters parade */}
+      {/* About teaser. With painting photos: Made With GSAP effect 123, parting letters parade. */}
       <section aria-label="The artist">
-        <Effect123 lines={["Forty years of teaching", "and creating, by hand"]}>
-          <ParadeMedia artworks={parade} />
-        </Effect123>
-        <div className="shell flex flex-col items-center gap-6 pb-24 text-center">
+        {parade.length >= 3 ? (
+          <Effect123 lines={["Forty years of teaching", "and creating, by hand"]}>
+            <ParadeMedia artworks={parade} />
+          </Effect123>
+        ) : (
+          <Reveal className="shell pt-24 text-center md:pt-32">
+            <p className="eyebrow">The artist</p>
+            <h2 className="mx-auto mt-6 max-w-4xl text-4xl leading-[1.15] md:text-6xl">Forty years of teaching and creating, by hand</h2>
+          </Reveal>
+        )}
+        <div className="shell flex flex-col items-center gap-6 pt-8 pb-24 text-center">
           <p className="max-w-2xl text-lg text-muted">
             {site.artist} has spent more than forty years teaching and creating art in every form she could learn.
           </p>
@@ -134,6 +152,33 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Testimonials: shown once some are added in Sanity */}
+      {testimonials.length ? (
+        <section aria-labelledby="testimonials-title" className="border-t border-line bg-surface">
+          <div className="shell py-24 md:py-28">
+            <Reveal>
+              <p className="eyebrow">In their words</p>
+              <h2 id="testimonials-title" className="mt-4 text-5xl md:text-6xl">
+                From students and collectors
+              </h2>
+            </Reveal>
+            <Reveal as="ul" stagger className="mt-14 grid gap-10 md:grid-cols-3">
+              {testimonials.map((t) => (
+                <li key={t._id}>
+                  <figure className="flex h-full flex-col justify-between gap-8 border-t border-brass pt-8">
+                    <blockquote className="font-display text-2xl leading-snug">&ldquo;{t.quote}&rdquo;</blockquote>
+                    <figcaption>
+                      <span className="block font-medium">{t.name}</span>
+                      {t.context ? <span className="block text-sm text-muted">{t.context}</span> : null}
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+      ) : null}
 
       {/* Contact band */}
       <section aria-labelledby="cta-title" className="bg-oxblood text-ivory">

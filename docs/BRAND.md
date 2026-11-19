@@ -11,7 +11,7 @@ Source of truth for brand facts used across the site. Update this file when deta
 
 ## What is offered
 
-- Original paintings (every piece is one-off; no prints or duplicates)
+- Original paintings, and prints of selected works (each painting can have an original price and a print price)
 - Workshops
 - Demos
 - Art classes
