@@ -41,8 +41,8 @@ const CHAPTERS: { title: string; text: ReactNode }[] = [
     text: (
       <>
         <p>
-          Classes run at the art studio and at her residence at {site.address.line1}, {site.address.line2},{" "}
-          {site.address.city}.
+          Classes run at the art studio at {site.studio.line1}, {site.studio.line2}, {site.studio.city}, and at her
+          residence at {site.address.line1}, {site.address.line2}, {site.address.city}.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
           <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line">

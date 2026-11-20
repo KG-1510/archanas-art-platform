@@ -90,6 +90,27 @@ A painting needs at least one price. Press **Publish**; it appears on the site w
 2. Add a webhook pointing at `https://<your-domain>/api/razorpay/webhook`, subscribed to `payment.captured`, and put its secret in `RAZORPAY_WEBHOOK_SECRET`.
 3. Enable international payments in the Razorpay dashboard to accept foreign cards.
 
+## Admin panel
+
+`/admin` is a private panel for running the shop: a dashboard, the orders with their courier status, and stock.
+
+- **Dashboard**: orders to pack, packed, shipped and delivered; sales this month and in total; originals in stock.
+- **Orders**: every paid order with the buyer's address. Set it to To pack, Packed, Shipped, Delivered or Cancelled, and record the courier and tracking number. Marking an order Shipped can email the buyer.
+- **Stock**: originals in stock per painting, what has sold online, and a way to correct a number or release a buyer's 15-minute hold.
+
+Setting it up:
+
+1. Make a sign-in for each person: `node scripts/admin-password.mjs`. It asks for a name and a password and prints one line.
+2. Put the lines in `ADMIN_USERS`, joined with a semicolon. Only password hashes are stored, never passwords.
+3. Set `ADMIN_SESSION_SECRET` to a long random string (`openssl rand -hex 32`).
+4. Add both to `.env.local` and to Vercel, then redeploy.
+
+Security notes: passwords are hashed with scrypt; the sign-in cookie is signed, HTTP-only, limited to `/admin` and lasts 12 hours; every admin page and action checks it; `/admin` is hidden from search engines. To remove someone, delete their entry from `ADMIN_USERS`. To sign everyone out, change `ADMIN_SESSION_SECRET`.
+
+### Order emails (optional)
+
+With `BREVO_API_KEY`, `ORDERS_FROM_EMAIL` and `ORDERS_NOTIFY_EMAIL` set, the buyer gets a confirmation when they pay, the studio gets a new-order alert, and the buyer can be emailed when an order is marked Shipped. Emails go through Brevo's transactional API; the sender's address or domain must be verified in Brevo. Without these, orders work and no email is sent.
+
 ## How buying works
 
 A painting can be bought as the original (sold once, tracked by stock) or as a print (no stock limit).

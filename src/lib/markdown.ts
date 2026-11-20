@@ -14,7 +14,8 @@ const contactBlock = () =>
     "",
     `- Phone: ${site.phoneE164}`,
     `- WhatsApp: ${whatsappLink()}`,
-    `- Address: ${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.postalCode}, India`,
+    `- Art studio: ${site.studio.line1}, ${site.studio.line2}, ${site.studio.city} - ${site.studio.postalCode}, India`,
+    `- Residence (classes also held here): ${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.postalCode}, India`,
     `- Art studio map: ${site.maps.studio}`,
     `- Residence map: ${site.maps.residence}`,
     `- Instagram: ${site.social.instagram}`,
@@ -141,7 +142,7 @@ function about() {
     "",
     "The studio is not built around a single medium. Painting, mandala, Nippon art and more are taught and practised under one roof.",
     "",
-    `Classes run at the art studio and at her residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.postalCode}.`,
+    `Classes run at the art studio at ${site.studio.line1}, ${site.studio.line2}, ${site.studio.city} - ${site.studio.postalCode}, and at her residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.postalCode}.`,
     "",
     contactBlock(),
   ].join("\n");

@@ -20,6 +20,16 @@ export const site = {
   phoneDisplay: "+91 89716 85880",
   phoneE164: "+918971685880",
   whatsappNumber: "918971685880",
+  /** The art studio. This is the business address used in the footer, contact page and structured data. */
+  studio: {
+    line1: "2nd Floor, A1 Market",
+    line2: "Near Nitesh Forest Hills, Seegehalli, Krishnarajapuram",
+    city: "Bengaluru",
+    postalCode: "560115",
+    region: "Karnataka",
+    country: "IN",
+  },
+  /** The residence, where classes are also held. */
   address: {
     line1: "3041, Prestige Tranquility",
     line2: "Off Old Madras Road",

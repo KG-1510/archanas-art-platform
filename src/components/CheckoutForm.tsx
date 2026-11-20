@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { INDIAN_STATES } from "@/lib/checkout";
 import { formatINR } from "@/lib/format";
 import type { PurchaseItem, ShippingRates } from "@/lib/types";
 
@@ -210,12 +211,33 @@ export function CheckoutForm({ slug, originalINR, printINR, printDetails, shippi
             <input name="city" required maxLength={60} autoComplete="address-level2" />
           </label>
           <label className="field">
-            <span>State / region</span>
-            <input name="state" required maxLength={60} autoComplete="address-level1" />
+            <span>{abroad ? "State / region" : "State"}</span>
+            {abroad ? (
+              <input name="state" required maxLength={60} autoComplete="address-level1" />
+            ) : (
+              <select name="state" required defaultValue="" autoComplete="address-level1">
+                <option value="" disabled>
+                  Choose a state
+                </option>
+                {INDIAN_STATES.map((st) => (
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
           <label className="field">
             <span>{abroad ? "Postal code" : "PIN code"}</span>
-            <input name="postalCode" required maxLength={12} autoComplete="postal-code" />
+            <input
+              name="postalCode"
+              required
+              maxLength={abroad ? 12 : 6}
+              inputMode={abroad ? "text" : "numeric"}
+              pattern={abroad ? undefined : "[1-9][0-9]{5}"}
+              title={abroad ? undefined : "A 6-digit PIN code"}
+              autoComplete="postal-code"
+            />
           </label>
         </div>
       </fieldset>

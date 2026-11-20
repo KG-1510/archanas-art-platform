@@ -40,6 +40,13 @@ export default async function ContactPage() {
 
           <div>
             <h2 className="text-3xl">Art studio</h2>
+            <address className="mt-3 not-italic text-muted">
+              {site.studio.line1}
+              <br />
+              {site.studio.line2}
+              <br />
+              {site.studio.city} – {site.studio.postalCode}
+            </address>
             <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line mt-4 inline-flex items-center gap-2">
               <MapPinIcon className="h-4 w-4" />
               Open in Google Maps

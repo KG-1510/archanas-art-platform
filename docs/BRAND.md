@@ -25,6 +25,7 @@ Source of truth for brand facts used across the site. Update this file when deta
 
 ## Where
 
+- **Art studio:** 2nd Floor, A1 Market, near Nitesh Forest Hills, Seegehalli, Krishnarajapuram, Bengaluru - 560115
 - **Art studio (Google Maps):** https://maps.app.goo.gl/8rvRL8QJHBRyYCvv8
 - **Classes at residence:** 3041, Prestige Tranquility, Off Old Madras Road, Bengaluru - 560049
   - Google Maps: https://share.google/jaq5bEkhkZrzt4VD9

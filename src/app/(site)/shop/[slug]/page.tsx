@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ArtworkImage } from "@/components/ArtworkCard";
 import { JsonLd } from "@/components/JsonLd";
+import { ShareButton } from "@/components/ShareButton";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
 import { getArtwork, getArtworks, getShippingRates } from "@/lib/content";
 import { formatINR, formatSize, formatSizeWithCm, originalAvailable, printAvailable } from "@/lib/format";
@@ -26,9 +27,19 @@ export async function generateMetadata({ params }: PageProps<"/shop/[slug]">): P
   return pageMeta(
     `/shop/${artwork.slug}`,
     artwork.title,
-    `${artwork.title}: ${artwork.medium}, ${formatSize(artwork.widthIn, artwork.heightIn)}. By ${site.artist}.`,
-    artwork.imageUrl ? `${artwork.imageUrl}?w=1200&h=630&fit=crop&auto=format` : undefined,
+    shareText(artwork),
+    // The whole painting on the site's mat colour, at the size link previews expect. JPEG keeps it small enough for WhatsApp.
+    artwork.imageUrl ? `${artwork.imageUrl}?w=1200&h=630&fit=fill&bg=f0eae0&fm=jpg&q=80` : undefined,
   );
+}
+
+/** The line shown under the name in a link preview: the start of the description, then the facts. */
+function shareText(artwork: { title: string; description: string; medium: string; widthIn: number; heightIn: number }) {
+  const facts = `${artwork.medium}, ${formatSize(artwork.widthIn, artwork.heightIn)}. By ${site.artist}.`;
+  const first = artwork.description.split("\n")[0].trim();
+  if (!first) return `${artwork.title}: ${facts}`;
+  const lead = first.length > 150 ? `${first.slice(0, first.lastIndexOf(" ", 150))}…` : first;
+  return `${lead} ${facts}`;
 }
 
 export default function ArtworkPage({ params }: PageProps<"/shop/[slug]">) {
@@ -113,6 +124,10 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
         </nav>
 
         <h1 className="rise rise-2 mt-6 text-5xl md:text-7xl">{artwork.title}</h1>
+        {/* Sits above the text below it, so its menu is never covered. */}
+        <div className="relative z-10 mt-5">
+          <ShareButton title={`${artwork.title} — ${site.name}`} text={`${artwork.title}, by ${site.artist}.`} url={url} />
+        </div>
 
         {artwork.description ? <p className="rise rise-3 mt-8 max-w-xl whitespace-pre-line text-muted">{artwork.description}</p> : null}
 

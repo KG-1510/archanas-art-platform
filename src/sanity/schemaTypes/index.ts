@@ -317,6 +317,13 @@ const order = defineType({
     defineField({ name: "razorpayPaymentId", type: "string" }),
     defineField({ name: "createdAt", type: "datetime" }),
     defineField({ name: "paidAt", type: "datetime" }),
+    // Set from the admin panel (/admin), not here.
+    defineField({ name: "fulfilment", title: "Where it has got to", description: "to-pack, packed, shipped, delivered or cancelled", type: "string" }),
+    defineField({ name: "courier", type: "string" }),
+    defineField({ name: "trackingNumber", title: "Tracking number", type: "string" }),
+    defineField({ name: "shippedAt", type: "datetime" }),
+    defineField({ name: "deliveredAt", type: "datetime" }),
+    defineField({ name: "adminNotes", title: "Private note", type: "text" }),
     defineField({
       name: "customer", type: "object",
       fields: ["name", "email", "phone", "address1", "address2", "city", "state", "postalCode", "country"].map((n) =>

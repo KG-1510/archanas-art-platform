@@ -23,7 +23,7 @@ export const metadata = pageMeta(
 const FAQS = [
   {
     q: "Where are classes held?",
-    a: `At the art studio, and at the residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city}. Both are linked from the contact page.`,
+    a: `At the art studio (${site.studio.line1}, ${site.studio.line2}, ${site.studio.city}), and at the residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city}. Both are linked from the contact page.`,
   },
   {
     q: "How do I book a class or a workshop?",

@@ -32,11 +32,11 @@ export function Footer() {
         <div className="flex flex-col gap-3">
           <p className="eyebrow">Visit</p>
           <address className="not-italic text-muted">
-            {site.address.line1}
+            {site.studio.line1}
             <br />
-            {site.address.line2}
+            {site.studio.line2}
             <br />
-            {site.address.city} – {site.address.postalCode}
+            {site.studio.city} – {site.studio.postalCode}
           </address>
           <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2.5 hover:text-oxblood transition-colors">
             <MapPinIcon />

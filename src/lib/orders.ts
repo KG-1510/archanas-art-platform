@@ -2,6 +2,7 @@ import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import Razorpay from "razorpay";
+import { sendOrderEmails } from "@/lib/email";
 import { getWriteClient } from "@/sanity/writeClient";
 
 export const RESERVATION_MINUTES = 15;
@@ -44,5 +45,17 @@ export async function markOrderPaid(razorpayOrderId: string, razorpayPaymentId: 
   }
   await tx.commit();
   revalidateTag("artworks", { expire: 0 });
+
+  // Tell the buyer and the studio. This runs once per order (a second call returns above),
+  // and a failed email never undoes a paid order.
+  try {
+    const paid = await sanity.fetch<Parameters<typeof sendOrderEmails>[0] | null>(
+      `*[_id == $id][0]{ razorpayOrderId, "item": coalesce(item, "original"), artworkTitle, priceINR, shippingINR, totalINR, customer }`,
+      { id: orderDocId },
+    );
+    if (paid?.customer?.email) await sendOrderEmails(paid);
+  } catch {
+    console.error("orders: confirmation email step failed");
+  }
   return { ok: true as const };
 }

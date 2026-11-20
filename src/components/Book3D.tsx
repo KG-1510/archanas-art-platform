@@ -30,6 +30,8 @@ export function Book3D({ title, coverUrl, backCoverUrl, aspect = 2 / 3, lean = "
   const [flipped, setFlipped] = useState(false);
   const flippedRef = useRef(false);
   const sign = lean === "left" ? -1 : 1;
+  /** The resting turn of the book: its lean, plus half a turn when it is showing its back. */
+  const base = () => sign * REST.y + (flippedRef.current ? 180 : 0);
 
   useGSAP(
     () => {
@@ -46,7 +48,7 @@ export function Book3D({ title, coverUrl, backCoverUrl, aspect = 2 / 3, lean = "
           (entries) => {
             if (!entries.some((e) => e.isIntersecting)) return;
             io.disconnect();
-            gsap.to(el, { rotationY: sign * REST.y, y: 0, autoAlpha: 1, duration: 1.8, ease: "expo.out" });
+            gsap.to(el, { rotationY: base(), y: 0, autoAlpha: 1, duration: 1.8, ease: "expo.out" });
           },
           { rootMargin: "0px 0px -12% 0px" },
         );
@@ -58,7 +60,6 @@ export function Book3D({ title, coverUrl, backCoverUrl, aspect = 2 / 3, lean = "
         // Lean toward the pointer.
         const toY = gsap.quickTo(el, "rotationY", { duration: 0.9, ease: "power3.out" });
         const toX = gsap.quickTo(el, "rotationX", { duration: 0.9, ease: "power3.out" });
-        const base = () => sign * REST.y + (flippedRef.current ? 180 : 0);
         const move = (e: PointerEvent) => {
           if (e.pointerType === "touch") return;
           const r = area.getBoundingClientRect();
@@ -90,7 +91,8 @@ export function Book3D({ title, coverUrl, backCoverUrl, aspect = 2 / 3, lean = "
     flippedRef.current = next;
     setFlipped(next);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    gsap.to(book.current, { rotationY: sign * REST.y + (next ? 180 : 0), rotationX: REST.x, duration: reduced ? 0 : 1.2, ease: "expo.inOut", overwrite: true });
+    // Also brings the book fully in, in case it is turned before its entrance has finished.
+    gsap.to(book.current, { rotationY: base(), rotationX: REST.x, y: 0, autoAlpha: 1, duration: reduced ? 0 : 1.2, ease: "expo.inOut", overwrite: true });
   };
 
   return (
@@ -101,9 +103,10 @@ export function Book3D({ title, coverUrl, backCoverUrl, aspect = 2 / 3, lean = "
           <div ref={book} className="book3d" style={{ aspectRatio: aspect }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="book3d-face book3d-front" src={`${coverUrl}?w=900&auto=format`} alt={`Front cover of ${title}`} decoding="async" />
+            {/* Not lazy-loaded: the browser treats a face turned away as off screen and would never fetch it. */}
             {backCoverUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img className="book3d-face book3d-back" src={`${backCoverUrl}?w=900&auto=format`} alt={`Back cover of ${title}`} loading="lazy" decoding="async" />
+              <img className="book3d-face book3d-back" src={`${backCoverUrl}?w=900&auto=format`} alt={`Back cover of ${title}`} decoding="async" />
             ) : (
               <div className="book3d-face book3d-back" aria-hidden="true" />
             )}

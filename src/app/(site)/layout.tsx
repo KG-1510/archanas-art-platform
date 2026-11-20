@@ -18,11 +18,11 @@ const organization = {
   founder: { "@type": "Person", name: site.artist, jobTitle: "Artist and art teacher" },
   address: {
     "@type": "PostalAddress",
-    streetAddress: `${site.address.line1}, ${site.address.line2}`,
-    addressLocality: site.address.city,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: site.address.country,
+    streetAddress: `${site.studio.line1}, ${site.studio.line2}`,
+    addressLocality: site.studio.city,
+    addressRegion: site.studio.region,
+    postalCode: site.studio.postalCode,
+    addressCountry: site.studio.country,
   },
   sameAs: [site.social.instagram, site.social.youtube, site.social.facebook],
 };
