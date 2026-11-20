@@ -27,6 +27,10 @@ export type Artwork = {
   pricePrintINR?: number;
   printDetails?: string;
   featured?: boolean;
+  /** Width divided by height of the main photo. */
+  imageAspect?: number;
+  /** Product code, e.g. AA-0001. */
+  code?: string;
 };
 
 export type PurchaseItem = "original" | "print";
@@ -65,3 +69,18 @@ export type LegalPage = {
 };
 
 export type ShippingRates = { indiaINR: number; internationalINR: number };
+
+export interface Book {
+  _id: string;
+  title: string;
+  subtitle?: string;
+  coverUrl: string;
+  /** Width divided by height of the front cover. */
+  coverAspect?: number;
+  backCoverUrl?: string;
+  description: string;
+  highlights: string[];
+  /** Missing until the Amazon link is added in the studio. */
+  amazonUrl?: string;
+  year?: number;
+}

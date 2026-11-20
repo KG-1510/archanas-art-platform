@@ -61,6 +61,9 @@ export async function POST(request: Request) {
   const rates = await getShippingRates();
   const shippingINR = isIndia(customer.country) ? rates.indiaINR : rates.internationalINR;
   const totalINR = priceINR + shippingINR;
+  // Razorpay takes amounts in paise and refuses anything under 100 paise (one rupee).
+  const amountPaise = Math.round(totalINR * 100);
+  if (!Number.isSafeInteger(amountPaise) || amountPaise < 100) return fail(400, "This amount cannot be paid online.");
 
   // Hold the original. ifRevisionId makes this fail if another buyer got there first.
   if (isOriginal) {
@@ -74,7 +77,7 @@ export async function POST(request: Request) {
 
   try {
     const rzpOrder = await razorpay.client.orders.create({
-      amount: totalINR * 100,
+      amount: amountPaise,
       currency: "INR",
       receipt: `art_${Date.now()}`,
       notes: { artworkId: artwork._id, slug, item },
@@ -98,7 +101,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       keyId: razorpay.keyId,
       orderId: rzpOrder.id,
-      amount: totalINR * 100,
+      amount: amountPaise,
       currency: "INR",
       name: site.name,
       description: `${artwork.title} (${isOriginal ? "original" : "print"})`,
@@ -106,7 +109,13 @@ export async function POST(request: Request) {
   } catch (err) {
     // Release the hold so the painting is not stuck if order creation failed.
     if (isOriginal) await sanity.patch(artwork._id).unset(["reservedUntil"]).commit().catch(() => {});
-    console.error("checkout: order creation failed", err instanceof Error ? err.message : "unknown error");
-    return fail(502, "We could not start the payment. Please try again.");
+    // The Razorpay SDK rejects with { statusCode, error: { code, description } }. Log the reason, never the keys.
+    const rzp = err as { statusCode?: number; error?: { code?: string; description?: string }; message?: string };
+    console.error("checkout: order creation failed", rzp.statusCode ?? "", rzp.error?.code ?? "", rzp.error?.description ?? rzp.message ?? "unknown error");
+    if (rzp.statusCode === 401) {
+      // Razorpay did not accept the key ID and secret: wrong pair, or a test key with a live secret.
+      return fail(401, "Online payment is not set up correctly yet. Please contact the studio on WhatsApp.");
+    }
+    return fail(500, "We could not start the payment. Please try again.");
   }
 }

@@ -27,7 +27,7 @@ export function Header() {
       <div className="shell flex items-center justify-between gap-6 py-3">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image src="/logo.jpg" alt="" width={52} height={52} priority className="h-12 w-12 mix-blend-multiply" />
-          <span className="font-display text-[1.7rem] font-semibold leading-none tracking-wide">{site.name}</span>
+          <span className="font-display text-[1.45rem] font-medium leading-none">{site.name}</span>
         </Link>
 
         <nav aria-label="Main" className="hidden md:block">

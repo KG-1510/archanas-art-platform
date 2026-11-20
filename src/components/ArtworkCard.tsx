@@ -2,24 +2,34 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatINR, formatSize, originalAvailable, printAvailable } from "@/lib/format";
 import type { Artwork } from "@/lib/types";
+import { ClipReveal } from "./Reveal";
 
-/** The painting's photograph. A plain tinted panel stands in if one is somehow missing. */
+/**
+ * The painting's photograph, always shown whole (never cropped). In a fixed-shape frame it sits
+ * on the mat colour; with `natural` the frame takes the photo's own shape.
+ */
 export function ArtworkImage({
   artwork,
   sizes,
   priority = false,
+  natural = false,
   className = "",
 }: {
   artwork: Artwork;
   sizes: string;
   priority?: boolean;
+  natural?: boolean;
   className?: string;
 }) {
   const alt = artwork.imageAlt || `${artwork.title}, ${artwork.medium}`;
   return (
-    <div className={`relative overflow-hidden bg-surface ${className}`}>
+    <div
+      className={`relative overflow-hidden bg-surface ${className}`}
+      // Capped between a tall 9:16 and a wide 16:9, so one extreme photo cannot dominate a page.
+      style={natural && artwork.imageAspect ? { aspectRatio: Math.min(16 / 9, Math.max(9 / 16, artwork.imageAspect)) } : undefined}
+    >
       {artwork.imageUrl ? (
-        <Image src={artwork.imageUrl} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
+        <Image src={artwork.imageUrl} alt={alt} fill sizes={sizes} priority={priority} className="object-contain" />
       ) : (
         <div role="img" aria-label={`${alt} (photograph coming soon)`} className="absolute inset-0 grid place-items-center text-sm text-muted">
           Photograph coming soon
@@ -50,15 +60,16 @@ export function PriceLine({ artwork }: { artwork: Artwork }) {
 
 export function ArtworkCard({ artwork }: { artwork: Artwork }) {
   return (
-    <article className="group flex flex-col">
+    <article className="art-card group flex flex-col">
       <Link href={`/shop/${artwork.slug}`} className="block">
-        <div className="border border-line bg-surface p-3 transition-colors duration-500 group-hover:border-brass">
+        <ClipReveal className="overflow-hidden border border-line bg-surface p-3 transition-colors duration-500 group-hover:border-brass">
           <ArtworkImage
             artwork={artwork}
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
-            className="aspect-[4/5] transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.02]"
+            natural
+            className="art-photo aspect-[4/5]"
           />
-        </div>
+        </ClipReveal>
         <div className="mt-5 flex flex-col gap-1">
           <h3 className="font-display text-2xl transition-colors duration-300 group-hover:text-oxblood">{artwork.title}</h3>
           <p className="text-sm text-muted">

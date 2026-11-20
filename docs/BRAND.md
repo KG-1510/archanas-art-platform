@@ -8,6 +8,11 @@ Source of truth for brand facts used across the site. Update this file when deta
 - **Run by:** Dr. Archana Gupta
 - **Experience:** 40+ years teaching and creating art
 - **Positioning:** all art forms taught and created under one roof
+- **Also an author:** her books are sold on Amazon. Each book is added in Sanity (Books) with its cover and Amazon link, and shows on the homepage and on /books
+
+## Recognition
+
+- **Ace Book of Records, National Record:** 62 watercolour paintings in 60 minutes, at the age of 62, painted on her 62nd birthday, 16 September 2025. The certificate reads "62 Watercolour Paintings at the Age of 62 in 60 Minutes", Bangalore, Karnataka, issue date 17-09-2025.
 
 ## What is offered
 
@@ -20,7 +25,7 @@ Source of truth for brand facts used across the site. Update this file when deta
 
 ## Where
 
-- **Art studio (Google Maps):** https://share.google/zKpgrLjzsM6mpcEEa
+- **Art studio (Google Maps):** https://maps.app.goo.gl/8rvRL8QJHBRyYCvv8
 - **Classes at residence:** 3041, Prestige Tranquility, Off Old Madras Road, Bengaluru - 560049
   - Google Maps: https://share.google/jaq5bEkhkZrzt4VD9
 
@@ -51,7 +56,7 @@ Source of truth for brand facts used across the site. Update this file when deta
   - Secondary (brass) `#B08D57`
   - Lines `#DDD3C5`
 - **Fonts (Google Fonts, two only)**
-  - Headings: Cormorant Garamond
+  - Headings: Playfair Display (replaced Cormorant Garamond, whose numeral 1 read as a capital I)
   - Body: Jost
 - **Feel:** aspirational, luxury, old-world gallery; smooth, restrained motion
 

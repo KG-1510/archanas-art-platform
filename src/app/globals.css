@@ -12,16 +12,17 @@
   --color-brass-deep: #6f5426; /* brass dark enough for small text on ivory */
   --color-line: #ddd3c5;
 
-  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-display-face), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-jost), system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+  /* Smooth scrolling is done by Lenis (ScrollFX); native smooth-scroll would fight it. */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body { overflow-x: clip; }
   body {
     background: var(--color-ivory);
     color: var(--color-ink);
@@ -32,9 +33,11 @@
   }
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.005em;
-    line-height: 1.08;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    /* Full-height figures, so a 1 never reads as a capital I. */
+    font-variant-numeric: lining-nums;
+    line-height: 1.12;
     text-wrap: balance;
   }
   ::selection {
@@ -145,6 +148,9 @@
   from { clip-path: inset(0 0 100% 0); }
   to { clip-path: inset(0 0 0 0); }
 }
+/* On a first visit the entrance waits for the loader curtain to lift (html[data-ready]). */
+html.js:not([data-ready]) .rise,
+html.js:not([data-ready]) .unveil { animation-play-state: paused; }
 .rise { animation: rise 1.1s var(--ease-luxe) both; }
 .rise-2 { animation-delay: 0.12s; }
 .rise-3 { animation-delay: 0.24s; }
@@ -186,7 +192,7 @@
 .mwg_effect123 .line {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2.1rem, 6.4vw, 6.5rem);
+  font-size: clamp(1.8rem, 5.4vw, 5.5rem);
   line-height: 1.05;
   white-space: nowrap;
 }
@@ -260,7 +266,185 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   .rise, .unveil { animation: none; }
   * { transition-duration: 0.01ms !important; }
+}
+
+/* ------------------------------------------------------------------
+   Display type and masked lines
+   ------------------------------------------------------------------ */
+.mega {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+/* Masked line reveal: wrap each line in .line > span (see ScrollFX). */
+.line { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.line > span { display: block; }
+.intro .line > span {
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+html.js:not([data-ready]) .intro .line > span { transform: translateY(112%); }
+
+/* The first-visit curtain never shows without JavaScript, or on later pages in the same visit. */
+html:not(.js) .aa-loader,
+html.seen .aa-loader { display: none; }
+
+/* Painting cards sit in columns and each takes the shape of its own photo, so wide and tall
+   paintings both fill their frame with no empty mat. Very long shapes are capped. */
+.art-columns { column-gap: 2rem; columns: 1; }
+@media (min-width: 640px) { .art-columns { columns: 2; } }
+@media (min-width: 1024px) { .art-columns { columns: 3; } }
+.art-columns > * { break-inside: avoid; margin-bottom: 3.5rem; }
+
+/* Painting cards: the photo eases forward on hover. */
+.art-card .art-photo { transition: transform 1.4s var(--ease-luxe); }
+.art-card:hover .art-photo { transform: scale(1.035); }
+
+/* Footer wordmark, sized to span the page. */
+.footer-mark { font-size: clamp(2.2rem, 11vw, 12.5rem); line-height: 1.25; white-space: nowrap; }
+/* Room for the tall letters and the apostrophe inside the reveal mask. */
+.footer-mark.line { padding-block: 0.14em 0.2em; margin-bottom: 0; }
+
+/* ------------------------------------------------------------------
+   Annnimate components (annnimate.com starter pack) in the site's
+   palette and type. The components' own files stay as shipped.
+   ------------------------------------------------------------------ */
+
+/* Art forms: Rotating Words */
+.aa-wheel.rw_page {
+  --rw-bg: var(--color-oxblood-deep);
+  --rw-fg: var(--color-ivory);
+  --rw-sans: var(--font-sans);
+  --rw-serif: var(--font-display);
+  --rw-display: min(9svh, 5vw);
+}
+.aa-wheel .rw_track { height: 280vh; }
+.aa-wheel .rw_stage { gap: 3vw; overflow: hidden; }
+.aa-wheel-label { flex: 0 0 40%; text-align: right; color: var(--color-ivory); }
+.aa-wheel-label .eyebrow { color: var(--color-brass); }
+.aa-wheel .rw_wheel { flex: 1; width: auto; line-height: 1; }
+.aa-wheel .rw_item { font-weight: 600; font-style: italic; letter-spacing: 0; }
+.aa-wheel .rw_nav { justify-content: flex-start; padding-left: 12%; }
+@media (max-width: 767px) {
+  .aa-wheel.rw_page { --rw-display: min(7.5svh, 9.5vw); }
+  .aa-wheel .rw_stage { flex-direction: column; justify-content: center; }
+  .aa-wheel-label { position: absolute; top: 12svh; left: 0; right: 0; flex: none; text-align: center; }
+  .aa-wheel .rw_wheel { width: 100%; flex: none; }
+  .aa-wheel .rw_nav { justify-content: center; padding-left: 0; }
+}
+
+/* Statements: Text Reveal. The component ships as a full-screen demo block; here it is just the text. */
+.text_reveal_wrap.aa-statement {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+.aa-statement .text_reveal_text {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 3.9vw, 3.9rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--color-muted);
+  contain: none;
+}
+.aa-statement .text_reveal_text strong { color: var(--color-oxblood); font-weight: 600; font-style: italic; }
+.aa-statement.on-dark .text_reveal_text { color: rgb(250 247 242 / 0.75); }
+.aa-statement.on-dark .text_reveal_text strong { color: var(--color-brass); }
+@media (prefers-reduced-motion: reduce) {
+  [data-anm-scroll-text-reveal] { visibility: visible !important; }
+}
+
+/* Section rule: Elastic Divider */
+.aa-rule.eldv_divider { height: 72px; margin-block: -36px; }
+
+/* Questions: Accordion */
+.aa-faq.accordion_section { --acc-line: var(--color-line); border-top-color: var(--color-ink); }
+.aa-faq .accordion_item { border-bottom-color: var(--color-line); }
+.aa-faq .accordion_trigger { padding: 1.6rem 0; color: var(--color-ink); }
+.aa-faq .accordion_trigger:hover,
+.aa-faq .accordion_trigger[aria-expanded="true"] { color: var(--color-oxblood); }
+.aa-faq .accordion_trigger:focus-visible { outline: 2px solid var(--color-oxblood); outline-offset: 3px; }
+.aa-faq .accordion_title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 2.2vw, 2.1rem); letter-spacing: 0; line-height: 1.15; }
+.aa-faq .accordion_icon { width: 1.1rem; height: 1.1rem; color: var(--color-oxblood); }
+.aa-faq .accordion_text { max-width: 58ch; padding-bottom: 1.8rem; font-size: 1.05rem; line-height: 1.7; color: var(--color-muted); }
+/* SplitText keeps the real spaces between words, so the component's extra word margin is not needed. */
+.aa-statement [data-anm-scroll-text-reveal] .split-word { margin-right: 0; }
+
+/* Anything set in the heading font outside h1-h3 gets full-height figures too. */
+.font-display, .mega, .rw_item, .accordion_title, .text_reveal_text { font-variant-numeric: lining-nums; }
+
+/* ------------------------------------------------------------------
+   Book in 3D (Book3D.tsx). Sizes come from --bw (width) and --bt (thickness).
+   ------------------------------------------------------------------ */
+.book3d-wrap { display: flex; flex-direction: column; align-items: center; }
+.book3d-stage {
+  --bw: clamp(190px, 24vw, 330px);
+  --bt: calc(var(--bw) * 0.075);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding-block: clamp(2rem, 5vw, 4rem);
+  perspective: 1700px;
+}
+.book3d-disc {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--bw) * 1.5);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-brass);
+  border: 1px solid var(--color-ink);
+  transform: translate(-50%, -50%);
+}
+.book3d-stage.is-wide { --bw: clamp(250px, 33vw, 460px); --bt: calc(var(--bw) * 0.05); }
+.book3d-stage.is-wide .book3d-disc { width: calc(var(--bw) * 1.05); }
+.book3d-float { position: relative; transform-style: preserve-3d; }
+.book3d {
+  position: relative;
+  width: var(--bw);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.book3d-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+  background: #f4efe6;
+  outline: 1px solid rgb(31 26 23 / 0.12);
+}
+.book3d-front { transform: translateZ(calc(var(--bt) / 2)); box-shadow: inset 4px 0 6px -3px rgb(0 0 0 / 0.35); }
+.book3d-back { transform: rotateY(180deg) translateZ(calc(var(--bt) / 2)); }
+.book3d-spine,
+.book3d-pages { position: absolute; top: 0; height: 100%; width: var(--bt); }
+.book3d-spine { left: 0; background: #e9e4dc left center / auto 100% no-repeat; transform: translateX(-50%) rotateY(-90deg); box-shadow: inset 0 0 0 100px rgb(0 0 0 / 0.07); }
+.book3d-pages {
+  right: 0;
+  top: 1.2%;
+  height: 97.6%;
+  transform: translateX(50%) rotateY(90deg);
+  background: repeating-linear-gradient(to right, #f4efe6 0 2px, #ddd3c5 2px 3px);
+}
+.book3d-shadow {
+  position: absolute;
+  bottom: clamp(0.6rem, 2vw, 1.6rem);
+  left: 50%;
+  width: calc(var(--bw) * 0.9);
+  height: 22px;
+  border-radius: 50%;
+  background: rgb(31 26 23 / 0.35);
+  filter: blur(14px);
+  transform: translateX(-50%);
 }

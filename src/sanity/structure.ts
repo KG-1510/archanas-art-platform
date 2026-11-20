@@ -54,6 +54,7 @@ export const structure: StructureResolver = (S) =>
               list(S, "workshop", "Past", `coalesce(endDate, startDate) < string::split(string(now()), "T")[0]`, {}, "startDate", "desc"),
             ]),
         ),
+      S.documentTypeListItem("book").title("Books"),
       S.documentTypeListItem("testimonial").title("Testimonials"),
       S.listItem()
         .title("Orders")

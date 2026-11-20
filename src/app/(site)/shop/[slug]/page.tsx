@@ -78,7 +78,7 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
     <article className="shell grid gap-12 pt-10 pb-24 md:grid-cols-[1.1fr_0.9fr] md:gap-16 md:pt-16 md:pb-32">
       <div className="unveil md:sticky md:top-28 md:self-start">
         <div className="border border-line bg-surface p-4 md:p-6">
-          <ArtworkImage artwork={artwork} priority sizes="(min-width: 768px) 52vw, 92vw" className="aspect-[4/5]" />
+          <ArtworkImage artwork={artwork} priority natural sizes="(min-width: 768px) 52vw, 92vw" className="aspect-[4/5]" />
         </div>
         {artwork.gallery.length ? (
           <ul aria-label="More photographs" className="mt-4 grid grid-cols-4 gap-3">
@@ -116,14 +116,14 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
 
         {artwork.description ? <p className="rise rise-3 mt-8 max-w-xl whitespace-pre-line text-muted">{artwork.description}</p> : null}
 
-        <dl className="rise rise-3 mt-10 grid grid-cols-[9rem_1fr] gap-y-4 border-y border-line py-8 text-[0.95rem]">
+        <dl className="rise rise-3 mt-10 grid grid-cols-[11rem_1fr] gap-y-4 border-y border-line py-8 text-[0.95rem]">
           <dt className="eyebrow self-center">Medium</dt>
           <dd>{artwork.medium}</dd>
-          <dt className="eyebrow self-center">Size</dt>
+          <dt className="eyebrow self-center">Size (L × W)</dt>
           <dd>{formatSizeWithCm(artwork.widthIn, artwork.heightIn)}</dd>
           {artwork.framed && artwork.framedWidthIn && artwork.framedHeightIn ? (
             <>
-              <dt className="eyebrow self-center">With frame</dt>
+              <dt className="eyebrow self-center">With frame (L × W)</dt>
               <dd>{formatSizeWithCm(artwork.framedWidthIn, artwork.framedHeightIn)}</dd>
             </>
           ) : null}
@@ -133,6 +133,12 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
             <>
               <dt className="eyebrow self-center">Year</dt>
               <dd>{artwork.year}</dd>
+            </>
+          ) : null}
+          {artwork.code ? (
+            <>
+              <dt className="eyebrow self-center">Code</dt>
+              <dd className="tabular-nums">{artwork.code}</dd>
             </>
           ) : null}
           <dt className="eyebrow self-center">Courier</dt>
@@ -180,7 +186,7 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
           ) : null}
 
           <a
-            href={whatsappLink(`Hello, I am interested in "${artwork.title}" (${url}).`)}
+            href={whatsappLink(`Hello, I am interested in "${artwork.title}"${artwork.code ? `, code ${artwork.code}` : ""} (${url}).`)}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-ghost self-start"
@@ -208,6 +214,7 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
           image: artwork.imageUrl || undefined,
           url,
           artMedium: artwork.medium,
+          ...(artwork.code ? { sku: artwork.code } : {}),
           artform: artwork.category,
           creator: { "@type": "Person", name: site.artist },
           width: { "@type": "QuantitativeValue", value: artwork.widthIn, unitCode: "INH" },

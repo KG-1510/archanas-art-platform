@@ -61,7 +61,7 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
       </p>
 
       {ordered.length ? (
-        <div className="mt-8 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 art-columns">
           {ordered.map((a) => (
             <ArtworkCard key={a._id} artwork={a} />
           ))}

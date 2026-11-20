@@ -12,6 +12,7 @@ export async function GET() {
       slug: a.slug,
       url: `${site.url}/shop/${a.slug}`,
       markdown: `${site.url}/shop/${a.slug}.md`,
+      code: a.code ?? null,
       category: a.category,
       medium: a.medium,
       widthIn: a.widthIn,

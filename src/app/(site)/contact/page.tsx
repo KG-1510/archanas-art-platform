@@ -1,3 +1,4 @@
+import { FacebookIcon, InstagramIcon, MapPinIcon, PhoneIcon, YouTubeIcon } from "@/components/Icons";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
@@ -26,7 +27,8 @@ export default async function ContactPage() {
           <div>
             <h2 className="text-3xl">Phone &amp; WhatsApp</h2>
             <p className="mt-3 text-lg">
-              <a href={`tel:${site.phoneE164}`} className="hover:text-oxblood">
+              <a href={`tel:${site.phoneE164}`} className="inline-flex items-center gap-3 hover:text-oxblood">
+                <PhoneIcon className="h-5 w-5 text-oxblood" />
                 {site.phoneDisplay}
               </a>
             </p>
@@ -38,7 +40,8 @@ export default async function ContactPage() {
 
           <div>
             <h2 className="text-3xl">Art studio</h2>
-            <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line mt-4 inline-block">
+            <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line mt-4 inline-flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4" />
               Open in Google Maps
             </a>
           </div>
@@ -50,7 +53,8 @@ export default async function ContactPage() {
               <br />
               {site.address.city} – {site.address.postalCode}
             </address>
-            <a href={site.maps.residence} target="_blank" rel="noopener noreferrer" className="link-line mt-4 inline-block">
+            <a href={site.maps.residence} target="_blank" rel="noopener noreferrer" className="link-line mt-4 inline-flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4" />
               Open in Google Maps
             </a>
           </div>
@@ -59,17 +63,20 @@ export default async function ContactPage() {
             <h2 className="text-3xl">Follow the work</h2>
             <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-4">
               <li>
-                <a href={site.social.instagram} target="_blank" rel="noopener noreferrer me" className="link-line">
+                <a href={site.social.instagram} target="_blank" rel="noopener noreferrer me" className="link-line inline-flex items-center gap-2">
+                  <InstagramIcon className="h-4 w-4" />
                   Instagram
                 </a>
               </li>
               <li>
-                <a href={site.social.youtube} target="_blank" rel="noopener noreferrer me" className="link-line">
+                <a href={site.social.youtube} target="_blank" rel="noopener noreferrer me" className="link-line inline-flex items-center gap-2">
+                  <YouTubeIcon className="h-4 w-4" />
                   YouTube
                 </a>
               </li>
               <li>
-                <a href={site.social.facebook} target="_blank" rel="noopener noreferrer me" className="link-line">
+                <a href={site.social.facebook} target="_blank" rel="noopener noreferrer me" className="link-line inline-flex items-center gap-2">
+                  <FacebookIcon className="h-4 w-4" />
                   Facebook
                 </a>
               </li>

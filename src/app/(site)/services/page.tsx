@@ -1,7 +1,10 @@
+import ElasticDivider from "@/components/annnimate/elastic-divider";
 import { EnquiryForm } from "@/components/EnquiryForm";
+import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
+import { VelocityMarquee } from "@/components/VelocityMarquee";
 import { Effect122 } from "@/components/mwg/Effect122";
 import { ParadeMedia } from "@/components/mwg/ParadeMedia";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
@@ -15,6 +18,30 @@ export const metadata = pageMeta(
   "Services",
   "Art classes, workshops, demos, mandala, Nippon art and commissioned paintings with Dr. Archana Gupta in Bengaluru.",
 );
+
+// Answers here repeat facts stated elsewhere on the site; nothing new is promised.
+const FAQS = [
+  {
+    q: "Where are classes held?",
+    a: `At the art studio, and at the residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city}. Both are linked from the contact page.`,
+  },
+  {
+    q: "How do I book a class or a workshop?",
+    a: `Send a message on WhatsApp to ${site.phoneDisplay}. Batches, dates and fees are confirmed there, personally.`,
+  },
+  {
+    q: "Can I commission a painting?",
+    a: "Yes. Tell us the size, the medium and what you have in mind, and the details are agreed in conversation before any work begins.",
+  },
+  {
+    q: "Can I buy a print instead of the original?",
+    a: "Selected paintings are offered as prints. Where a print is available, its price is shown on the painting's page next to the original.",
+  },
+  {
+    q: "Do you send paintings outside India?",
+    a: "Yes. Paintings are sent by courier within India and internationally. The courier charge is shown before you pay.",
+  },
+];
 
 export default async function ServicesPage() {
   const [services, artworks, workshops] = await Promise.all([getServices(), getArtworks(), getUpcomingWorkshops()]);
@@ -31,7 +58,7 @@ export default async function ServicesPage() {
         <section aria-labelledby="upcoming-title" className="shell pb-20">
           <Reveal>
             <p className="eyebrow">Dates to book</p>
-            <h2 id="upcoming-title" className="mt-4 text-5xl md:text-6xl">
+            <h2 id="upcoming-title" className="mega mt-4 text-4xl md:text-6xl">
               Upcoming workshops and classes
             </h2>
           </Reveal>
@@ -76,11 +103,13 @@ export default async function ServicesPage() {
         </section>
       ) : null}
 
-      <section aria-label="Services" className="shell pb-24">
+      <VelocityMarquee items={services.map((s) => s.title)} />
+
+      <section aria-label="Services" className="shell pt-10 pb-24">
         {services.map((s) => (
           <Reveal key={s._id}>
-            <article id={s.slug} className="grid scroll-mt-28 gap-6 border-t border-line py-12 md:grid-cols-[0.8fr_1.2fr] md:gap-14 md:py-16">
-              <h2 className="text-5xl md:text-6xl">{s.title}</h2>
+            <article id={s.slug} className="grid scroll-mt-28 gap-6 border-t border-line py-12 first:border-t-0 md:grid-cols-[0.8fr_1.2fr] md:gap-14 md:py-16">
+              <h2 className="mega text-4xl md:text-6xl">{s.title}</h2>
               <div>
                 <p className="text-lg">{s.summary}</p>
                 {s.details.length ? (
@@ -106,11 +135,25 @@ export default async function ServicesPage() {
         </Effect122>
       ) : null}
 
+      {/* Questions: Annnimate Accordion */}
+      <section aria-labelledby="faq-title" className="shell py-24 md:py-32">
+        <ElasticDivider className="aa-rule" color="#b08d57" />
+        <div className="grid gap-12 pt-16 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
+          <Reveal>
+            <p className="eyebrow">Before you ask</p>
+            <h2 id="faq-title" className="mega mt-4 text-4xl md:text-6xl">
+              Some <em className="text-oxblood">answers</em>
+            </h2>
+          </Reveal>
+          <Faq items={FAQS} />
+        </div>
+      </section>
+
       <section aria-labelledby="enquire-title" className="border-t border-line bg-surface">
         <div className="shell grid gap-12 py-24 md:grid-cols-2 md:py-28">
           <Reveal>
             <p className="eyebrow">Enquire</p>
-            <h2 id="enquire-title" className="mt-4 text-5xl">
+            <h2 id="enquire-title" className="mega mt-4 text-5xl md:text-6xl">
               Ask about batches, dates and fees
             </h2>
             <p className="mt-6 max-w-md text-muted">

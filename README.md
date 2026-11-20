@@ -13,7 +13,7 @@ Brand facts, palette and fonts live in [docs/BRAND.md](docs/BRAND.md).
 | Content | Sanity. Studio is embedded at `/studio` |
 | Payments | Razorpay (guest checkout, INR) |
 | Animation | GSAP + ScrollTrigger and SplitText (`src/components/Reveal.tsx`, `src/components/mwg/`) |
-| Fonts | Cormorant Garamond (headings) and Jost (body), via `next/font` |
+| Fonts | Playfair Display (headings) and Jost (body), via `next/font` |
 
 ## Run it
 

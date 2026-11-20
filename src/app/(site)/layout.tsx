@@ -1,6 +1,8 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { Loader } from "@/components/Loader";
+import { ScrollFX } from "@/components/ScrollFX";
 import { WebMCPTools } from "@/components/WebMCPTools";
 import { WhatsAppFloat } from "@/components/WhatsAppButton";
 import { site } from "@/lib/site";
@@ -34,12 +36,14 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       >
         Skip to content
       </a>
+      <Loader />
       <Header />
       <main id="main" className="flex-1">
         {children}
       </main>
       <Footer />
       <WhatsAppFloat />
+      <ScrollFX />
       <WebMCPTools />
       <JsonLd data={organization} />
     </>

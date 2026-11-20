@@ -42,6 +42,30 @@ const artwork = defineType({
     }),
     defineField({ name: "title", title: "Painting name", type: "string", group: "main", validation: (r) => r.required().max(80) }),
     defineField({
+      name: "code", title: "Product code", type: "string", group: "main",
+      description: "Filled in automatically as the next free number (AA-0001, AA-0002, ...). Shown on the painting page, so a buyer can quote it. Write it on the back of the painting.",
+      // Next free AA-number, worked out when a new painting is started.
+      initialValue: async (_params, context) => {
+        const codes: string[] = await context
+          .getClient({ apiVersion: "2025-01-01" })
+          .fetch(`*[_type == "artwork" && defined(code)].code`);
+        const highest = codes.reduce((max, c) => {
+          const n = /^AA-(\d+)$/.exec(c);
+          return n ? Math.max(max, Number(n[1])) : max;
+        }, 0);
+        return `AA-${String(highest + 1).padStart(4, "0")}`;
+      },
+      validation: (r) =>
+        r.required().custom(async (value, context) => {
+          if (!value) return true;
+          const id = (context.document?._id ?? "").replace(/^drafts\./, "");
+          const clash: number = await context
+            .getClient({ apiVersion: "2025-01-01" })
+            .fetch(`count(*[_type == "artwork" && code == $code && !(_id in [$id, "drafts." + $id])])`, { code: value, id });
+          return clash ? "Another painting already uses this code." : true;
+        }),
+    }),
+    defineField({
       name: "slug", title: "Web address", type: "slug", group: "main",
       description: "Press Generate after typing the name. This becomes archanasart.in/shop/…",
       options: { source: "title", maxLength: 80 }, validation: (r) => r.required(),
@@ -112,10 +136,6 @@ const artwork = defineType({
       description: "The homepage shows up to three featured paintings.",
     }),
     defineField({
-      name: "code", title: "Your own reference number", type: "string", group: "sale",
-      description: "Optional. A number or code you use to find the physical painting, e.g. AA-0142. Not shown on the website.",
-    }),
-    defineField({
       name: "reservedUntil", title: "Original held for a buyer until", type: "datetime", group: "sale", readOnly: true,
       description: "Set automatically while someone is paying.",
     }),
@@ -131,9 +151,9 @@ const artwork = defineType({
     { title: "Name, A to Z", name: "title", by: [{ field: "title", direction: "asc" }] },
   ],
   preview: {
-    select: { title: "title", stock: "stock", original: "priceOriginalINR", print: "pricePrintINR", media: "image" },
-    prepare: ({ title, stock, original, print, media }) => {
-      const parts: string[] = [];
+    select: { title: "title", code: "code", stock: "stock", original: "priceOriginalINR", print: "pricePrintINR", media: "image" },
+    prepare: ({ title, code, stock, original, print, media }) => {
+      const parts: string[] = code ? [code] : [];
       if (typeof original === "number") parts.push((stock ?? 1) > 0 ? `Original ${inr.format(original)}` : "Original SOLD");
       if (typeof print === "number") parts.push(`Print ${inr.format(print)}`);
       return { title, subtitle: parts.join(" · ") || "No price yet", media };
@@ -184,6 +204,39 @@ const workshop = defineType({
     select: { title: "title", kind: "kind", date: "startDate" },
     prepare: ({ title, kind, date }) => ({ title, subtitle: [kind, date].filter(Boolean).join(" · ") }),
   },
+});
+
+const book = defineType({
+  name: "book",
+  title: "Book",
+  type: "document",
+  fields: [
+    defineField({ name: "title", title: "Book title", type: "string", validation: (r) => r.required().max(120) }),
+    defineField({ name: "subtitle", description: "Optional. The line under the title on the cover.", type: "string" }),
+    defineField({
+      name: "cover", title: "Front cover", type: "image",
+      description: "A straight-on photo or scan of the front cover, cropped to the edges of the book.",
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "backCover", title: "Back cover", type: "image",
+      description: "Optional. With a back cover, visitors get a button to turn the book round.",
+    }),
+    defineField({ name: "description", title: "About the book", type: "text", rows: 5, validation: (r) => r.required() }),
+    defineField({
+      name: "highlights", title: "Inside the book", type: "array", of: [defineArrayMember({ type: "string" })],
+      description: "Optional. Up to four short points.",
+      validation: (r) => r.max(4),
+    }),
+    defineField({
+      name: "amazonUrl", title: "Amazon link", type: "url",
+      description: "The book's page on Amazon. The website's button opens this link. Until it is filled in, the button says \"Ask on WhatsApp\" instead.",
+      validation: (r) => r.uri({ scheme: ["https"] }),
+    }),
+    defineField({ name: "year", title: "Year published", type: "number", validation: (r) => r.integer().min(1950).max(2100) }),
+    defineField({ name: "order", title: "Position on the page", description: "1 appears first.", type: "number" }),
+  ],
+  preview: { select: { title: "title", subtitle: "subtitle", media: "cover" } },
 });
 
 const testimonial = defineType({
@@ -280,4 +333,4 @@ const order = defineType({
   },
 });
 
-export const schemaTypes: SchemaTypeDefinition[] = [artwork, workshop, testimonial, service, legalPage, siteSettings, order];
+export const schemaTypes: SchemaTypeDefinition[] = [artwork, book, workshop, testimonial, service, legalPage, siteSettings, order];

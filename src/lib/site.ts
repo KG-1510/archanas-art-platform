@@ -29,7 +29,7 @@ export const site = {
     country: "IN",
   },
   maps: {
-    studio: "https://share.google/zKpgrLjzsM6mpcEEa",
+    studio: "https://maps.app.goo.gl/8rvRL8QJHBRyYCvv8",
     residence: "https://share.google/jaq5bEkhkZrzt4VD9",
   },
   social: {
@@ -47,6 +47,7 @@ export function whatsappLink(message?: string) {
 export const nav = [
   { href: "/shop", label: "Marketplace" },
   { href: "/services", label: "Services" },
+  { href: "/books", label: "Books" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;

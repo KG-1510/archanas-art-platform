@@ -1,15 +1,15 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { readClient } from "@/sanity/client";
 import { seedLegal, seedServices, seedShipping } from "./seed";
-import type { Artwork, LegalPage, Photo, Service, ShippingRates, Testimonial, Workshop } from "./types";
+import type { Artwork, Book, LegalPage, Photo, Service, ShippingRates, Testimonial, Workshop } from "./types";
 
 // Field names on the website differ slightly from the studio's, so the mapping lives here.
 const ARTWORK_FIELDS = `_id, title, "slug": slug.current, category, medium, widthIn, heightIn,
   "framed": framed == "framed", framedWidthIn, framedHeightIn, year,
   "description": coalesce(description, ""),
-  "imageUrl": image.asset->url, "imageAlt": image.alt,
+  "imageUrl": image.asset->url, "imageAlt": image.alt, "imageAspect": image.asset->metadata.dimensions.aspectRatio,
   "gallery": coalesce(additionalImages[defined(asset)]{ "url": asset->url, alt }, []),
-  priceOriginalINR, "stock": coalesce(stock, 1), pricePrintINR, printDetails, featured`;
+  priceOriginalINR, "stock": coalesce(stock, 1), pricePrintINR, printDetails, featured, code`;
 
 /** Every published painting that has a web address and at least one price. Empty until content is added. */
 export async function getArtworks(): Promise<Artwork[]> {
@@ -54,6 +54,20 @@ export async function getUpcomingWorkshops(): Promise<Workshop[]> {
   return readClient.fetch<Workshop[]>(
     `*[_type == "workshop" && coalesce(endDate, startDate) >= string::split(string(now()), "T")[0]]
       | order(startDate asc) { _id, title, kind, startDate, endDate, schedule, location, feeINR, seats, description }`,
+  );
+}
+
+/** Books written by the artist, in the order set in the studio. Empty until some are added. */
+export async function getBooks(): Promise<Book[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("books");
+  if (!readClient) return [];
+  return readClient.fetch<Book[]>(
+    `*[_type == "book" && defined(cover.asset)] | order(coalesce(order, 99) asc, _createdAt desc) {
+      _id, title, subtitle, "coverUrl": cover.asset->url, "coverAspect": cover.asset->metadata.dimensions.aspectRatio,
+      "backCoverUrl": backCover.asset->url, "description": coalesce(description, ""),
+      "highlights": coalesce(highlights, []), amazonUrl, year }`,
   );
 }
 

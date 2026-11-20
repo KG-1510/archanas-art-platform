@@ -18,9 +18,13 @@ type RazorpayOptions = {
   handler: (response: RazorpayResponse) => void;
   modal: { ondismiss: () => void };
 };
+type RazorpayFailure = { error?: { description?: string; reason?: string } };
 declare global {
   interface Window {
-    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+    Razorpay?: new (options: RazorpayOptions) => {
+      open: () => void;
+      on: (event: "payment.failed", handler: (response: RazorpayFailure) => void) => void;
+    };
   }
 }
 
@@ -91,7 +95,7 @@ export function CheckoutForm({ slug, originalINR, printINR, printDetails, shippi
 
       if (!(await loadRazorpay()) || !window.Razorpay) throw new Error("The payment window could not load. Check your connection and try again.");
 
-      new window.Razorpay({
+      const checkout = new window.Razorpay({
         key: order.keyId,
         order_id: order.orderId,
         amount: order.amount,
@@ -115,7 +119,15 @@ export function CheckoutForm({ slug, originalINR, printINR, printDetails, shippi
           }
         },
         modal: { ondismiss: () => setBusy(false) },
-      }).open();
+      });
+      // A declined card or failed UPI attempt. Razorpay keeps its window open so the buyer can try
+      // another method; this message is there if they close it instead.
+      checkout.on("payment.failed", (failure) => {
+        setError(
+          `The payment did not go through${failure.error?.description ? `: ${failure.error.description}` : "."} Nothing has been charged. You can try again or use another method.`,
+        );
+      });
+      checkout.open();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setBusy(false);
