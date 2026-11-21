@@ -159,6 +159,7 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
           <dt className="eyebrow self-center">Courier</dt>
           <dd>
             India {formatINR(shipping.indiaINR)} · International {formatINR(shipping.internationalINR)}
+            <span className="block text-sm text-muted">Standard courier. Charges are subject to change.</span>
           </dd>
         </dl>
 

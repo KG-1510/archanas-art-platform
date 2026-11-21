@@ -8,9 +8,43 @@ const TONE: Record<Fulfilment, string> = {
   cancelled: "border border-line text-muted line-through",
 };
 
-export function StatusPill({ order }: { order: Pick<AdminOrder, "status" | "fulfilment"> }) {
-  if (order.status !== "paid") return <span className="inline-block border border-line px-2.5 py-1 text-xs uppercase tracking-[0.14em] text-muted">Not paid</span>;
-  return <span className={`inline-block px-2.5 py-1 text-xs uppercase tracking-[0.14em] ${TONE[order.fulfilment]}`}>{FULFILMENT_LABEL[order.fulfilment]}</span>;
+export function StatusPill({ order }: { order: Pick<AdminOrder, "status" | "fulfilment" | "testMode"> }) {
+  const test = order.testMode ? (
+    <span className="ml-2 inline-block border border-brass-deep px-2 py-1 text-xs uppercase tracking-[0.14em] text-brass-deep">Test</span>
+  ) : null;
+  if (order.status !== "paid") {
+    return (
+      <span className="whitespace-nowrap">
+        <span className="inline-block border border-line px-2.5 py-1 text-xs uppercase tracking-[0.14em] text-muted">Not paid</span>
+        {test}
+      </span>
+    );
+  }
+  return (
+    <span className="whitespace-nowrap">
+      <span className={`inline-block px-2.5 py-1 text-xs uppercase tracking-[0.14em] ${TONE[order.fulfilment]}`}>{FULFILMENT_LABEL[order.fulfilment]}</span>
+      {test}
+    </span>
+  );
+}
+
+/** A small picture of the painting, whole, on the mat colour. Decorative: the name is always beside it. */
+export function Thumb({ src, size = 64 }: { src?: string; size?: number }) {
+  const box = { width: size, height: size };
+  if (!src) return <span aria-hidden="true" className="block shrink-0 border border-line bg-surface" style={box} />;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`${src}?w=${size * 2}&h=${size * 2}&fit=fill&bg=f0eae0&auto=format`}
+      alt=""
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
+      className="block shrink-0 border border-line bg-surface"
+      style={box}
+    />
+  );
 }
 
 /** Date and time in India, whatever the server's own timezone. */

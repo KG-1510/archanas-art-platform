@@ -3,7 +3,10 @@ import { requireAdmin } from "@/lib/admin/auth";
 import { listStock } from "@/lib/admin/data";
 import { formatINR } from "@/lib/format";
 import { releaseHold, setStock } from "../../actions";
-import { Notice, when } from "../ui";
+import { Notice, Thumb, when } from "../ui";
+
+// Waits for the sign-in check before showing anything, on purpose.
+export const instant = false;
 
 export default async function AdminStock({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin();
@@ -14,7 +17,7 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
     <>
       <h1 className="text-4xl md:text-5xl">Stock</h1>
       <p className="mt-4 max-w-2xl text-muted">
-        Stock counts originals only. A paid order for an original takes one off automatically. Prints have no stock limit. Change a number
+        Stock counts originals only. A paid order for an original takes one off automatically (test payments do not). Prints have no stock limit. Change a number
         here only to correct it, for example after selling a painting in person.
       </p>
       <div className="mt-8">
@@ -41,13 +44,16 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
                   <tr key={r._id} className="border-b border-line align-top">
                     <td className="py-4 pr-4 tabular-nums">{r.code ?? ""}</td>
                     <td className="py-4 pr-4">
-                      {r.slug ? (
-                        <Link href={`/shop/${r.slug}`} className="font-medium underline underline-offset-4 hover:text-oxblood">
-                          {r.title}
-                        </Link>
-                      ) : (
-                        <span className="font-medium">{r.title}</span>
-                      )}
+                      <span className="flex items-center gap-4">
+                        <Thumb src={r.image} />
+                        {r.slug ? (
+                          <Link href={`/shop/${r.slug}`} className="font-medium underline underline-offset-4 hover:text-oxblood">
+                            {r.title}
+                          </Link>
+                        ) : (
+                          <span className="font-medium">{r.title}</span>
+                        )}
+                      </span>
                     </td>
                     <td className="py-4 pr-4">
                       {sellsOriginal ? (

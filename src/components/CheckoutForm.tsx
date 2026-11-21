@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { INDIAN_STATES } from "@/lib/checkout";
+import { RazorpayIcon } from "./Icons";
 import { formatINR } from "@/lib/format";
 import type { PurchaseItem, ShippingRates } from "@/lib/types";
 
@@ -245,7 +246,7 @@ export function CheckoutForm({ slug, originalINR, printINR, printDetails, shippi
       <dl className="grid grid-cols-[1fr_auto] gap-y-3 border-y border-line py-6 tabular-nums">
         <dt className="text-muted">{item === "original" ? "Original painting" : "Print"}</dt>
         <dd>{formatINR(priceINR)}</dd>
-        <dt className="text-muted">Courier ({abroad ? "international" : "India"})</dt>
+        <dt className="text-muted">Standard courier ({abroad ? "international" : "India"})</dt>
         <dd>{formatINR(shippingINR)}</dd>
         <dt className="pt-3 font-display text-2xl">Total</dt>
         <dd className="pt-3 font-display text-2xl">{formatINR(priceINR + shippingINR)}</dd>
@@ -257,6 +258,7 @@ export function CheckoutForm({ slug, originalINR, printINR, printDetails, shippi
 
       <div className="flex flex-col gap-4">
         <button type="submit" className="btn self-start" disabled={busy}>
+          <RazorpayIcon className="h-4 w-4" />
           {busy ? "Opening secure payment…" : "Pay securely with Razorpay"}
         </button>
         <p role="alert" className="min-h-6 text-oxblood">

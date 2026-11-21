@@ -2,12 +2,17 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { dashboardNumbers, listOrders } from "@/lib/admin/data";
 import { emailConfigured } from "@/lib/email";
+import { paymentMode } from "@/lib/orders";
 import { formatINR } from "@/lib/format";
-import { StatusPill, when } from "./ui";
+import { StatusPill, Thumb, when } from "./ui";
+
+// Waits for the sign-in check before showing anything, on purpose.
+export const instant = false;
 
 export default async function AdminDashboard() {
   await requireAdmin();
   const [n, recent] = await Promise.all([dashboardNumbers(), listOrders("paid")]);
+  const mode = paymentMode();
   if (!n) return <p className="text-muted">Sanity is not connected, so there is nothing to show yet.</p>;
 
   const tiles = [
@@ -20,6 +25,24 @@ export default async function AdminDashboard() {
   return (
     <>
       <h1 className="text-4xl md:text-5xl">Dashboard</h1>
+
+      <p role="status" className={`mt-6 border px-4 py-3 ${mode === "live" ? "border-line text-muted" : "border-brass-deep text-brass-deep"}`}>
+        {mode === "live"
+          ? "Payments are live: buyers are charged real money."
+          : mode === "test"
+            ? "Payments are in test mode here: no real money moves, and test orders do not change stock or the sales figures below."
+            : mode === "blocked"
+              ? "Payments are blocked here: a live Razorpay key is set outside the production site. Use test keys on this machine and on staging."
+              : "Payments are switched off here: no Razorpay keys are set."}
+        {n.testPaid ? (
+          <>
+            {" "}
+            <Link href="/admin/orders?show=test" className="underline underline-offset-4">
+              {n.testPaid} test {n.testPaid === 1 ? "order" : "orders"}
+            </Link>
+          </>
+        ) : null}
+      </p>
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tiles.map((t) => (
@@ -70,7 +93,8 @@ export default async function AdminDashboard() {
         <ul className="mt-6 flex flex-col">
           {recent.slice(0, 8).map((o) => (
             <li key={o._id} className="border-t border-line last:border-b">
-              <Link href={`/admin/orders/${o.razorpayOrderId}`} className="grid gap-2 py-4 hover:text-oxblood sm:grid-cols-[1fr_auto_auto] sm:items-center sm:gap-8">
+              <Link href={`/admin/orders/${o.razorpayOrderId}`} className="grid gap-2 py-4 hover:text-oxblood sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6">
+                <Thumb src={o.artworkImage} size={56} />
                 <span>
                   <span className="font-medium">{o.artworkTitle}</span> <span className="text-muted">({o.item})</span>
                   <span className="block text-sm text-muted">{o.customer?.name} · {when(o.paidAt)}</span>

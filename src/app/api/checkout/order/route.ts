@@ -66,7 +66,9 @@ export async function POST(request: Request) {
   if (!Number.isSafeInteger(amountPaise) || amountPaise < 100) return fail(400, "This amount cannot be paid online.");
 
   // Hold the original. ifRevisionId makes this fail if another buyer got there first.
-  if (isOriginal) {
+  // Test-mode checkouts place no hold, so practice runs never block a real buyer.
+  const holds = isOriginal && !razorpay.testMode;
+  if (holds) {
     const reservedUntil = new Date(Date.now() + RESERVATION_MINUTES * 60_000).toISOString();
     try {
       await sanity.patch(artwork._id).ifRevisionId(artwork._rev).set({ reservedUntil }).commit();
@@ -87,6 +89,7 @@ export async function POST(request: Request) {
       _id: `order.${rzpOrder.id}`,
       _type: "order",
       status: "pending",
+      testMode: razorpay.testMode,
       item,
       artwork: { _type: "reference", _ref: artwork._id },
       artworkTitle: artwork.title,
@@ -108,7 +111,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     // Release the hold so the painting is not stuck if order creation failed.
-    if (isOriginal) await sanity.patch(artwork._id).unset(["reservedUntil"]).commit().catch(() => {});
+    if (holds) await sanity.patch(artwork._id).unset(["reservedUntil"]).commit().catch(() => {});
     // The Razorpay SDK rejects with { statusCode, error: { code, description } }. Log the reason, never the keys.
     const rzp = err as { statusCode?: number; error?: { code?: string; description?: string }; message?: string };
     console.error("checkout: order creation failed", rzp.statusCode ?? "", rzp.error?.code ?? "", rzp.error?.description ?? rzp.message ?? "unknown error");

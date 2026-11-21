@@ -36,7 +36,7 @@ export const seedServices: Service[] = [
 ];
 
 // Courier charges used until real values are set in Sanity → Site settings.
-export const seedShipping: ShippingRates = { indiaINR: 500, internationalINR: 5000 };
+export const seedShipping: ShippingRates = { indiaINR: 500, internationalINR: 2000 };
 
 export const seedLegal: LegalPage[] = [
   {
@@ -67,7 +67,7 @@ export const seedLegal: LegalPage[] = [
     sections: [
       { heading: "Where we ship", body: "We courier paintings across India and internationally." },
       { heading: "Packing and dispatch", body: "Each painting is packed by hand for safe transit. We will share the courier name and tracking number once your order is dispatched." },
-      { heading: "Courier charges", body: "Courier charges are added at checkout and depend on whether the delivery address is in India or abroad." },
+      { heading: "Courier charges", body: "Standard courier is ₹500 within India and ₹2,000 for international delivery, added at checkout. These charges are subject to change; the charge shown at checkout before you pay is the one that applies to your order." },
       { heading: "International orders", body: "Customs duties, import taxes and clearance fees charged by the destination country are paid by the buyer and are not included in our prices." },
       { heading: "Damage in transit", body: "If your painting arrives damaged, contact us within 48 hours of delivery with photographs of the packaging and the artwork, and we will work out a repair, replacement or refund with you." },
       { heading: "Returns and cancellations", body: "Because originals are one-off pieces and prints are made to order, we do not accept returns for change of mind. An order can be cancelled for a full refund any time before it is dispatched." },

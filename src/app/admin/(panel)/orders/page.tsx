@@ -2,19 +2,23 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { FULFILMENT, FULFILMENT_LABEL, listOrders, type Fulfilment } from "@/lib/admin/data";
 import { formatINR } from "@/lib/format";
-import { StatusPill, when } from "../ui";
+import { StatusPill, Thumb, when } from "../ui";
 
 const FILTERS = [
   { key: "paid", label: "All paid" },
   ...FULFILMENT.map((f) => ({ key: f as string, label: FULFILMENT_LABEL[f] })),
   { key: "unpaid", label: "Not paid" },
+  { key: "test", label: "Test payments" },
 ];
+
+// Waits for the sign-in check before showing anything, on purpose.
+export const instant = false;
 
 export default async function AdminOrders({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin();
   const raw = (await searchParams).show;
   const show = typeof raw === "string" && FILTERS.some((f) => f.key === raw) ? raw : "paid";
-  const orders = await listOrders(show as "paid" | "unpaid" | Fulfilment);
+  const orders = await listOrders(show as "paid" | "unpaid" | "test" | Fulfilment);
 
   return (
     <>
@@ -37,7 +41,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
 
       {orders.length ? (
         <div className="mt-8 overflow-x-auto">
-          <table className="w-full min-w-[46rem] border-collapse text-left">
+          <table className="w-full min-w-[52rem] border-collapse text-left">
             <thead>
               <tr className="border-b border-ink text-xs uppercase tracking-[0.14em] text-muted">
                 <th scope="col" className="py-3 pr-4 font-medium">Paid</th>
@@ -53,13 +57,16 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
                 <tr key={o._id} className="border-b border-line align-top">
                   <td className="py-4 pr-4 text-sm text-muted">{when(o.paidAt ?? o.createdAt)}</td>
                   <td className="py-4 pr-4">
-                    <Link href={`/admin/orders/${o.razorpayOrderId}`} className="font-medium underline underline-offset-4 hover:text-oxblood">
-                      {o.artworkTitle}
+                    <Link href={`/admin/orders/${o.razorpayOrderId}`} className="group flex items-center gap-4">
+                      <Thumb src={o.artworkImage} />
+                      <span>
+                        <span className="font-medium underline underline-offset-4 group-hover:text-oxblood">{o.artworkTitle}</span>
+                        <span className="block text-sm text-muted">
+                          {o.item === "print" ? "Print" : "Original"}
+                          {o.artworkCode ? ` · ${o.artworkCode}` : ""}
+                        </span>
+                      </span>
                     </Link>
-                    <span className="block text-sm text-muted">
-                      {o.item === "print" ? "Print" : "Original"}
-                      {o.artworkCode ? ` · ${o.artworkCode}` : ""}
-                    </span>
                   </td>
                   <td className="py-4 pr-4">
                     {o.customer?.name}

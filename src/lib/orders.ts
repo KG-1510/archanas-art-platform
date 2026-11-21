@@ -7,11 +7,24 @@ import { getWriteClient } from "@/sanity/writeClient";
 
 export const RESERVATION_MINUTES = 15;
 
+/**
+ * "test" with a Razorpay test key (no real money), "live" with a live key on the production site,
+ * "blocked" with a live key anywhere else (refused, so nothing there can charge a card), "off" with none.
+ */
+export function paymentMode(): "test" | "live" | "off" | "blocked" {
+  const id = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
+  if (id.startsWith("rzp_live_")) return process.env.VERCEL_ENV === "production" ? "live" : "blocked";
+  return id.startsWith("rzp_test_") ? "test" : "off";
+}
+
 export function getRazorpay() {
   const key_id = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
   const key_secret = process.env.RAZORPAY_KEY_SECRET;
   if (!key_id || !key_secret) return null;
-  return { client: new Razorpay({ key_id, key_secret }), keyId: key_id, keySecret: key_secret };
+  // Real money is only ever taken on the production site. A live key on a preview
+  // deployment or a developer's machine is refused, so a test there can never charge a card.
+  if (key_id.startsWith("rzp_live_") && process.env.VERCEL_ENV !== "production") return null;
+  return { client: new Razorpay({ key_id, key_secret }), keyId: key_id, keySecret: key_secret, testMode: paymentMode() === "test" };
 }
 
 /** Constant-time comparison of an HMAC-SHA256 hex signature. */
@@ -32,7 +45,7 @@ export async function markOrderPaid(razorpayOrderId: string, razorpayPaymentId: 
   if (!/^order_[A-Za-z0-9]+$/.test(razorpayOrderId)) return { ok: false as const, reason: "bad-id" };
 
   const orderDocId = `order.${razorpayOrderId}`;
-  const order = await sanity.getDocument<{ _id: string; status?: string; item?: string; artwork?: { _ref: string } }>(orderDocId);
+  const order = await sanity.getDocument<{ _id: string; status?: string; item?: string; testMode?: boolean; artwork?: { _ref: string } }>(orderDocId);
   if (!order) return { ok: false as const, reason: "unknown-order" };
   if (order.status === "paid") return { ok: true as const };
 
@@ -40,7 +53,9 @@ export async function markOrderPaid(razorpayOrderId: string, razorpayPaymentId: 
     .transaction()
     .patch(orderDocId, (p) => p.set({ status: "paid", razorpayPaymentId, paidAt: new Date().toISOString() }));
   // Buying an original takes one out of stock and releases the hold. Prints have no stock.
-  if (order.artwork?._ref && order.item !== "print") {
+  // A test-mode order never touches stock: staging and local share the real paintings,
+  // and a practice purchase must not mark a real painting as sold.
+  if (order.artwork?._ref && order.item !== "print" && !order.testMode) {
     tx.patch(order.artwork._ref, (p) => p.setIfMissing({ stock: 1 }).dec({ stock: 1 }).unset(["reservedUntil"]));
   }
   await tx.commit();

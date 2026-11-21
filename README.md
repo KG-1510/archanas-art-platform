@@ -90,6 +90,15 @@ A painting needs at least one price. Press **Publish**; it appears on the site w
 2. Add a webhook pointing at `https://<your-domain>/api/razorpay/webhook`, subscribed to `payment.captured`, and put its secret in `RAZORPAY_WEBHOOK_SECRET`.
 3. Enable international payments in the Razorpay dashboard to accept foreign cards.
 
+## Test and live payments
+
+| Where | Razorpay keys | What happens |
+| --- | --- | --- |
+| Production (archanasart.in) | Live (`rzp_live_`) | Real money. Buying an original holds it, then takes it out of stock. |
+| Staging (Vercel preview) and local | Test (`rzp_test_`) | No real money. Orders are tagged **Test**, never hold or reduce stock, and are left out of the sales figures. |
+
+A live key outside production is refused, so nothing there can charge a card. In Vercel, set `NEXT_PUBLIC_RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` and `RAZORPAY_WEBHOOK_SECRET` once for **Production** (live) and once for **Preview** and **Development** (test). Staging and local share the production Sanity dataset, which is why test orders are kept away from stock.
+
 ## Admin panel
 
 `/admin` is a private panel for running the shop: a dashboard, the orders with their courier status, and stock.

@@ -307,6 +307,7 @@ const order = defineType({
   readOnly: true,
   fields: [
     defineField({ name: "status", type: "string" }),
+    defineField({ name: "testMode", title: "Test payment", description: "Paid with a Razorpay test key: no real money, and stock was not changed.", type: "boolean" }),
     defineField({ name: "item", title: "Bought", description: "original or print", type: "string" }),
     defineField({ name: "artwork", title: "Painting", type: "reference", to: [{ type: "artwork" }] }),
     defineField({ name: "artworkTitle", title: "Painting name", type: "string" }),

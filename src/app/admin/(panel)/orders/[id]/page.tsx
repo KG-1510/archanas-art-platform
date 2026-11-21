@@ -5,7 +5,10 @@ import { FULFILMENT, FULFILMENT_LABEL, getOrder } from "@/lib/admin/data";
 import { emailConfigured } from "@/lib/email";
 import { formatINR } from "@/lib/format";
 import { updateOrder } from "../../../actions";
-import { Notice, StatusPill, when } from "../../ui";
+import { Notice, StatusPill, Thumb, when } from "../../ui";
+
+// Waits for the sign-in check before showing anything, on purpose.
+export const instant = false;
 
 export default async function AdminOrder({
   params,
@@ -28,14 +31,20 @@ export default async function AdminOrder({
           All orders
         </Link>
       </p>
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <h1 className="text-4xl md:text-5xl">{order.artworkTitle}</h1>
-        <StatusPill order={order} />
-      </div>
-      <p className="mt-2 text-muted">
+      <div className="mt-6 flex flex-wrap items-center gap-6">
+        <Thumb src={order.artworkImage} size={128} />
+        <div>
+          <div className="flex flex-wrap items-center gap-4">
+            <h1 className="text-4xl md:text-5xl">{order.artworkTitle}</h1>
+            <StatusPill order={order} />
+          </div>
+          <p className="mt-2 text-muted">
         {order.item === "print" ? "Print" : "Original painting"}
         {order.artworkCode ? ` · ${order.artworkCode}` : ""} · reference {order.razorpayOrderId.replace(/^order_/, "")}
       </p>
+          {order.testMode ? <p className="mt-2 text-sm text-brass-deep">Test payment: no real money moved, and stock was not changed.</p> : null}
+        </div>
+      </div>
 
       <div className="mt-8">
         <Notice saved={typeof query.saved === "string" ? query.saved : undefined} emailed={typeof query.emailed === "string" ? query.emailed : undefined} />
