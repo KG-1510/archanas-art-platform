@@ -8,8 +8,8 @@ import { site, whatsappLink } from "@/lib/site";
 
 export const metadata = pageMeta(
   "/shop",
-  "Marketplace",
-  "Buy original paintings, mandala and Nippon art by Dr. Archana Gupta, as originals or prints. Couriered across India and internationally.",
+  "Gallery",
+  "Browse original paintings and prints by Dr. Archana Gupta. Search by name, medium, size and price. Sent by courier across India and abroad.",
 );
 
 export default async function ShopPage() {
@@ -17,8 +17,8 @@ export default async function ShopPage() {
 
   return (
     <>
-      <PageIntro eyebrow="Our marketplace" title="Originals and prints, straight from the studio">
-        <p>Each original is sold only once. Selected works are also available as prints. Couriered across India and abroad.</p>
+      <PageIntro eyebrow="The gallery" title="Find the painting that feels like yours">
+        <p>Original paintings by {site.artist}, each one sold only once, and prints of selected works. Sent by courier across India and abroad.</p>
       </PageIntro>
 
       <section aria-label="Artworks" className="shell pb-24 md:pb-32">
@@ -28,7 +28,7 @@ export default async function ShopPage() {
           <div className="flex flex-col items-start gap-6 border-t border-line pt-14">
             <h2 className="text-4xl md:text-5xl">New works are being added.</h2>
             <p className="max-w-xl text-lg text-muted">
-              The marketplace is being stocked. To ask about a painting in the meantime, message {site.artist} directly.
+              The gallery is being hung. To ask about a painting in the meantime, message {site.artist} directly.
             </p>
             <a
               href={whatsappLink("Hello, I would like to know which paintings are available.")}

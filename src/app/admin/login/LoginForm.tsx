@@ -16,7 +16,7 @@ export function LoginForm() {
         <input name="password" type="password" required maxLength={200} autoComplete="current-password" />
       </label>
       {error ? (
-        <p role="alert" className="text-oxblood">
+        <p role="alert" className="text-rose-700">
           {error}
         </p>
       ) : null}

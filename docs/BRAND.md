@@ -6,9 +6,22 @@ Source of truth for brand facts used across the site. Update this file when deta
 
 - **Brand name:** Archana's Art
 - **Run by:** Dr. Archana Gupta
-- **Experience:** 40+ years teaching and creating art
-- **Positioning:** all art forms taught and created under one roof
+- **Experience:** 40+ years in fine art, as an artist and art educator
+- **Positioning:** every art form, one studio
 - **Also an author:** her books are sold on Amazon. Each book is added in Sanity (Books) with its cover and Amazon link, and shows on the homepage and on /books
+
+## About Dr. Archana Gupta (from her own write-up)
+
+- B.A. (Fine Arts), Ph.D. (Political Science). Born in Gwalior, India, in 1963.
+- Practising fine arts for 40+ years (her older write-up says "over 35"; use 40+).
+- Exhibited in several Indian cities and at a few international exhibitions. Numerous national and international awards.
+- Media: canvas, paper and pottery; watercolour, oil, acrylic and mixed media. Signature style: loose watercolour.
+- Subjects: landscapes, seascapes, portraits, still life, flora and fauna, and folk arts such as Madhubani, Rajasthani and Tanjore.
+- As an art educator, has guided over 5,000 students and continues to. Has led workshops for serious art students and corporate teams, and judged art competitions.
+- Her paintings hang in homes, clubs, hotels and art galleries around the world.
+- Based in Bengaluru, where she runs Archana's Art as an art academy and a painting studio.
+- Author of five books in the Loose Water Colour series. Planned: plein air, mixed media, a handbook of art.
+- Loader line: "Welcome to the artistic world, created by Dr. Archana Gupta".
 
 ## Recognition
 
@@ -21,7 +34,10 @@ Source of truth for brand facts used across the site. Update this file when deta
 - Demos
 - Art classes
 - Mandala art
-- Nippon art
+- Lippan art
+- Glass painting
+- Fabric painting
+- Pot painting
 
 ## Where
 
@@ -45,6 +61,16 @@ Source of truth for brand facts used across the site. Update this file when deta
 - Shipping: India and international, sent by courier to the client
 - Checkout: guest checkout only (no customer accounts for now)
 - Payments: Razorpay
+
+## Voice
+
+Theme: **An artistic world.** Warm and welcoming; speaks to students and families as much as collectors.
+
+- Homepage headline: "Step into an artistic world."
+- The shop is "the gallery". Classes are "Learn with Dr. Archana".
+- She is an **art educator**, never a "teacher". Say "art education", "leads classes", "her students".
+- Say "40+ years of art" (never "four decades" or "forty years"). Avoid "slowly", "by hand for forty years" and similar: it reads as if one painting took forty years.
+- "Under one roof" is used once, in the homepage line: "learn all fine art forms under one roof" (the owner's wording, 2026-11-21).
 
 ## Visual identity
 

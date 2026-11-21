@@ -4,7 +4,7 @@ import { dashboardNumbers, listOrders } from "@/lib/admin/data";
 import { emailConfigured } from "@/lib/email";
 import { paymentMode } from "@/lib/orders";
 import { formatINR } from "@/lib/format";
-import { StatusPill, Thumb, when } from "./ui";
+import { STAGE, StageIcon, StatusPill, Thumb, when } from "./ui";
 
 // Waits for the sign-in check before showing anything, on purpose.
 export const instant = false;
@@ -16,17 +16,17 @@ export default async function AdminDashboard() {
   if (!n) return <p className="text-muted">Sanity is not connected, so there is nothing to show yet.</p>;
 
   const tiles = [
-    { label: "To pack", value: n.toPack, href: "/admin/orders?show=to-pack", urgent: n.toPack > 0 },
-    { label: "Packed, to send", value: n.packed, href: "/admin/orders?show=packed", urgent: n.packed > 0 },
-    { label: "Shipped", value: n.shipped, href: "/admin/orders?show=shipped" },
-    { label: "Delivered", value: n.delivered, href: "/admin/orders?show=delivered" },
+    { stage: "to-pack" as const, label: "To pack", value: n.toPack },
+    { stage: "packed" as const, label: "Packed, to send", value: n.packed },
+    { stage: "shipped" as const, label: "Shipped", value: n.shipped },
+    { stage: "delivered" as const, label: "Delivered", value: n.delivered },
   ];
 
   return (
     <>
       <h1 className="text-4xl md:text-5xl">Dashboard</h1>
 
-      <p role="status" className={`mt-6 border px-4 py-3 ${mode === "live" ? "border-line text-muted" : "border-brass-deep text-brass-deep"}`}>
+      <p role="status" className={`mt-6 border px-4 py-3 ${mode === "live" ? "border-emerald-300 bg-emerald-50 text-emerald-900" : mode === "test" ? "border-amber-300 bg-amber-50 text-amber-900" : "border-rose-300 bg-rose-50 text-rose-900"} rounded-lg`}>
         {mode === "live"
           ? "Payments are live: buyers are charged real money."
           : mode === "test"
@@ -47,9 +47,14 @@ export default async function AdminDashboard() {
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tiles.map((t) => (
           <li key={t.label}>
-            <Link href={t.href} className={`block border p-5 transition-colors hover:border-oxblood ${t.urgent ? "border-oxblood" : "border-line"}`}>
-              <span className="block font-display text-5xl text-oxblood">{t.value}</span>
-              <span className="mt-1 block text-sm uppercase tracking-[0.16em] text-muted">{t.label}</span>
+            <Link href={`/admin/orders?show=${t.stage}`} className="block rounded-lg border border-line bg-white p-5 transition-shadow hover:shadow-md">
+              <span className="flex items-start justify-between gap-4">
+                <span className={`block text-5xl font-medium tabular-nums ${t.value ? STAGE[t.stage].number : "text-stone-400"}`}>{t.value}</span>
+                <span className={`grid h-11 w-11 place-items-center rounded-full ${STAGE[t.stage].tile}`}>
+                  <StageIcon stage={t.stage} />
+                </span>
+              </span>
+              <span className="mt-2 block text-sm uppercase tracking-[0.16em] text-muted">{t.label}</span>
             </Link>
           </li>
         ))}
@@ -70,14 +75,14 @@ export default async function AdminDashboard() {
           <dt className="eyebrow">Originals</dt>
           <dd className="mt-2 text-2xl font-medium tabular-nums">{n.inStock} in stock</dd>
           <dd className="text-sm text-muted">
-            {n.soldOut} sold · <Link href="/admin/stock" className="underline underline-offset-4 hover:text-oxblood">see stock</Link>
+            {n.soldOut} sold · <Link href="/admin/inventory" className="underline underline-offset-4 hover:text-sky-700">see inventory</Link>
           </dd>
         </div>
         <div>
           <dt className="eyebrow">Payment not completed</dt>
           <dd className="mt-2 text-2xl font-medium tabular-nums">{n.unpaid}</dd>
           <dd className="text-sm text-muted">
-            <Link href="/admin/orders?show=unpaid" className="underline underline-offset-4 hover:text-oxblood">Checkouts that were started and left</Link>
+            <Link href="/admin/orders?show=unpaid" className="underline underline-offset-4 hover:text-sky-700">Checkouts that were started and left</Link>
           </dd>
         </div>
       </dl>
@@ -93,7 +98,7 @@ export default async function AdminDashboard() {
         <ul className="mt-6 flex flex-col">
           {recent.slice(0, 8).map((o) => (
             <li key={o._id} className="border-t border-line last:border-b">
-              <Link href={`/admin/orders/${o.razorpayOrderId}`} className="grid gap-2 py-4 hover:text-oxblood sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6">
+              <Link href={`/admin/orders/${o.razorpayOrderId}`} className="grid gap-2 py-4 hover:text-sky-700 sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6">
                 <Thumb src={o.artworkImage} size={56} />
                 <span>
                   <span className="font-medium">{o.artworkTitle}</span> <span className="text-muted">({o.item})</span>

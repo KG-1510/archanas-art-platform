@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+    // 90 is used for the class photographs, which are collages with fine detail.
+    qualities: [75, 90],
   },
   async rewrites() {
     return {

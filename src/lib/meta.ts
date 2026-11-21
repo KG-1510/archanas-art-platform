@@ -12,13 +12,13 @@ export const defaultShareImage = {
   url: "/og.jpg",
   width: 1200,
   height: 630,
-  alt: `${site.name} — ${site.tagline}`,
+  alt: `${site.name} | ${site.tagline}`,
   type: "image/jpeg",
 };
 
 export function pageMeta(path: string, title: string | undefined, description: string, image?: string): Metadata {
   const md = path === "/" ? "/index.md" : `${path}.md`;
-  const shareTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
+  const shareTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
   const images = [image ? { url: image, width: 1200, height: 630, alt: title || site.name } : defaultShareImage];
   return {
     ...(title ? { title } : {}),

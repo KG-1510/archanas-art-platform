@@ -16,7 +16,7 @@ export function Footer() {
           <Image src="/logo.jpg" alt="Archana's Art logo: a painter's palette and brush" width={160} height={160} className="h-36 w-36 mix-blend-multiply" />
           <p className="font-display text-2xl font-medium">{site.name}</p>
           <p className="max-w-xs text-muted">
-            The studio of {site.artist}. 40+ years of teaching and creating, all art forms under one roof.
+            An artistic world created by {site.artist}. Original paintings and prints to buy, and art classes at her studio in Bengaluru.
           </p>
         </div>
 

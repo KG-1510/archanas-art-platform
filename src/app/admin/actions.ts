@@ -61,12 +61,12 @@ export async function setStock(form: FormData) {
   const sanity = getWriteClient();
   const id = String(form.get("id") ?? "");
   const stock = Number(form.get("stock"));
-  if (!sanity || !/^[A-Za-z0-9._-]{1,80}$/.test(id) || id.startsWith("order.") || !Number.isInteger(stock) || stock < 0 || stock > 999) redirect("/admin/stock?saved=no");
+  if (!sanity || !/^[A-Za-z0-9._-]{1,80}$/.test(id) || id.startsWith("order.") || !Number.isInteger(stock) || stock < 0 || stock > 999) redirect("/admin/inventory?saved=no");
   const exists = await sanity.fetch<number>(`count(*[_type == "artwork" && _id == $id])`, { id });
-  if (!exists) redirect("/admin/stock?saved=no");
+  if (!exists) redirect("/admin/inventory?saved=no");
   await sanity.patch(id).set({ stock }).commit();
   revalidateTag("artworks", { expire: 0 });
-  redirect("/admin/stock?saved=yes");
+  redirect("/admin/inventory?saved=yes");
 }
 
 /** Lets go of a 15-minute hold left by a buyer who did not finish paying. */
@@ -74,10 +74,10 @@ export async function releaseHold(form: FormData) {
   await requireAdmin();
   const sanity = getWriteClient();
   const id = String(form.get("id") ?? "");
-  if (!sanity || !/^[A-Za-z0-9._-]{1,80}$/.test(id) || id.startsWith("order.")) redirect("/admin/stock?saved=no");
+  if (!sanity || !/^[A-Za-z0-9._-]{1,80}$/.test(id) || id.startsWith("order.")) redirect("/admin/inventory?saved=no");
   const exists = await sanity.fetch<number>(`count(*[_type == "artwork" && _id == $id])`, { id });
-  if (!exists) redirect("/admin/stock?saved=no");
+  if (!exists) redirect("/admin/inventory?saved=no");
   await sanity.patch(id).unset(["reservedUntil"]).commit();
   revalidateTag("artworks", { expire: 0 });
-  redirect("/admin/stock?saved=yes");
+  redirect("/admin/inventory?saved=yes");
 }

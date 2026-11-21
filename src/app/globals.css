@@ -22,7 +22,8 @@
   /* Smooth scrolling is done by Lenis (ScrollFX); native smooth-scroll would fight it. */
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-stopped { overflow: hidden; }
-  body { overflow-x: clip; }
+  /* Nothing may make the page wider than the screen: on a phone that shrinks the whole site into a corner. */
+  html, body { overflow-x: clip; }
   body {
     background: var(--color-ivory);
     color: var(--color-ink);
@@ -131,8 +132,12 @@
     padding: 0.55rem 0;
     color: var(--color-ink);
     border-radius: 0;
+    letter-spacing: normal;
+    text-transform: none;
     transition: border-color 0.3s;
   }
+  /* A control wrapped beside an icon sits inside the label's span: give it body-size type back. */
+  .field > span input { font-size: 1rem; }
   .field input:focus, .field select:focus, .field textarea:focus {
     outline: none;
     border-bottom-color: var(--color-oxblood);
@@ -288,6 +293,35 @@ html.js:not([data-ready]) .unveil { animation-play-state: paused; }
 }
 html.js:not([data-ready]) .intro .line > span { transform: translateY(112%); }
 
+/* First-visit curtain: soft pools of oxblood, wine and brass drifting behind the wordmark. */
+.aa-loader-glow {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+}
+.aa-loader-glow-1 { top: -28vmax; left: -20vmax; background: radial-gradient(circle, #8a2a36 0%, transparent 62%); animation: aa-drift-1 9s ease-in-out infinite alternate; }
+.aa-loader-glow-2 { bottom: -34vmax; right: -22vmax; background: radial-gradient(circle, #b08d57 0%, transparent 60%); opacity: 0.28; animation: aa-drift-2 11s ease-in-out infinite alternate; }
+.aa-loader-glow-3 { top: 10%; right: -30vmax; background: radial-gradient(circle, #3c0f16 0%, transparent 64%); opacity: 0.7; animation: aa-drift-3 13s ease-in-out infinite alternate; }
+/* A faint paper grain, so the colour does not look flat. */
+.aa-loader-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.aa-loader-in { animation: rise 1s var(--ease-luxe) both; }
+@keyframes aa-drift-1 { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
+@keyframes aa-drift-2 { to { transform: translate(-12vmax, -9vmax) scale(1.2); } }
+@keyframes aa-drift-3 { to { transform: translate(-16vmax, 8vmax) scale(0.9); } }
+@media (prefers-reduced-motion: reduce) {
+  .aa-loader-glow, .aa-loader-in { animation: none; }
+}
+
 /* The first-visit curtain never shows without JavaScript, or on later pages in the same visit. */
 html:not(.js) .aa-loader,
 html.seen .aa-loader { display: none; }
@@ -312,29 +346,6 @@ html.seen .aa-loader { display: none; }
    Annnimate components (annnimate.com starter pack) in the site's
    palette and type. The components' own files stay as shipped.
    ------------------------------------------------------------------ */
-
-/* Art forms: Rotating Words */
-.aa-wheel.rw_page {
-  --rw-bg: var(--color-oxblood-deep);
-  --rw-fg: var(--color-ivory);
-  --rw-sans: var(--font-sans);
-  --rw-serif: var(--font-display);
-  --rw-display: min(9svh, 5vw);
-}
-.aa-wheel .rw_track { height: 280vh; }
-.aa-wheel .rw_stage { gap: 3vw; overflow: hidden; }
-.aa-wheel-label { flex: 0 0 40%; text-align: right; color: var(--color-ivory); }
-.aa-wheel-label .eyebrow { color: var(--color-brass); }
-.aa-wheel .rw_wheel { flex: 1; width: auto; line-height: 1; }
-.aa-wheel .rw_item { font-weight: 600; font-style: italic; letter-spacing: 0; }
-.aa-wheel .rw_nav { justify-content: flex-start; padding-left: 12%; }
-@media (max-width: 767px) {
-  .aa-wheel.rw_page { --rw-display: min(7.5svh, 9.5vw); }
-  .aa-wheel .rw_stage { flex-direction: column; justify-content: center; }
-  .aa-wheel-label { position: absolute; top: 12svh; left: 0; right: 0; flex: none; text-align: center; }
-  .aa-wheel .rw_wheel { width: 100%; flex: none; }
-  .aa-wheel .rw_nav { justify-content: center; padding-left: 0; }
-}
 
 /* Statements: Text Reveal. The component ships as a full-screen demo block; here it is just the text. */
 .text_reveal_wrap.aa-statement {
@@ -379,7 +390,7 @@ html.seen .aa-loader { display: none; }
 .aa-statement [data-anm-scroll-text-reveal] .split-word { margin-right: 0; }
 
 /* Anything set in the heading font outside h1-h3 gets full-height figures too. */
-.font-display, .mega, .rw_item, .accordion_title, .text_reveal_text { font-variant-numeric: lining-nums; }
+.font-display, .mega, .accordion_title, .text_reveal_text { font-variant-numeric: lining-nums; }
 
 /* ------------------------------------------------------------------
    Book in 3D (Book3D.tsx). Sizes come from --bw (width) and --bt (thickness).
@@ -449,3 +460,72 @@ html.seen .aa-loader { display: none; }
   filter: blur(14px);
   transform: translateX(-50%);
 }
+
+/* Admin panel: a working tool, so neutral ink instead of the site's oxblood, with colour kept for order stages. */
+.aa-admin .btn { background: var(--color-ink); border-color: var(--color-ink); }
+.aa-admin .btn:hover { background: #000; border-color: #000; }
+.aa-admin .link-line { color: var(--color-ink); }
+.aa-admin .eyebrow { color: var(--color-muted); }
+.aa-admin .field input:focus, .aa-admin .field select:focus, .aa-admin .field textarea:focus { border-bottom-color: var(--color-ink); }
+
+/* Book carousel: the incoming book's section fades up. */
+.book-slide { animation: rise 0.8s var(--ease-luxe) both; }
+@media (prefers-reduced-motion: reduce) { .book-slide { animation: none; } }
+
+
+/* Services on the homepage: Annnimate Diagonal Gallery, in the site's palette. */
+.dia_wrap.aa-diagonal {
+  --dia-bg: var(--color-surface);
+  --dia-ink: var(--color-ink);
+  --dia-grey: var(--color-muted);
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+/* The component hangs its headline off the photo's left edge; here it is centred over the stage. */
+.aa-diagonal .dia_headline {
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding-inline: var(--dia-margin, 20px);
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.4vw, 4.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  font-variant-numeric: lining-nums;
+}
+.aa-diagonal .dia_dim { color: var(--color-oxblood); font-style: italic; }
+.aa-diagonal .dia_title { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.6rem, 2.2vw, 2.4rem); letter-spacing: -0.01em; }
+.aa-diagonal .dia_text { font-size: 1.05rem; line-height: 1.6; }
+.aa-diagonal .dia_photo { border: 1px solid var(--color-line); background: var(--color-ivory); }
+.aa-diagonal .dia_number, .aa-diagonal .dia_total { font-family: var(--font-display); font-variant-numeric: lining-nums; }
+@media (max-width: 767px) {
+  /* Keep the headline clear of the site's sticky header on a phone. */
+  .aa-diagonal .dia_headline { top: 5.75rem; left: 0; right: 0; }
+}
+
+/* Everything clickable shows the hand cursor: dropdowns, buttons, links, checkboxes and their labels. */
+select:not(:disabled),
+button:not(:disabled),
+[role="button"],
+[role="tab"],
+summary,
+a[href],
+label:has(input[type="radio"], input[type="checkbox"]),
+input[type="radio"],
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* Full-screen photograph viewer on a painting's page. */
+.aa-zoom {
+  width: 100vw; height: 100dvh; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: color-mix(in oklab, var(--color-ink) 96%, transparent);
+  overscroll-behavior: contain;
+}
+.aa-zoom::backdrop { background: var(--color-ink); }
+.aa-zoom[open] { animation: aa-zoom-in 0.35s var(--ease-luxe); }
+@keyframes aa-zoom-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .aa-zoom[open] { animation: none; } }

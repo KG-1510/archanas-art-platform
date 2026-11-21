@@ -15,7 +15,7 @@ const organization = {
   description: site.description,
   url: site.url,
   telephone: site.phoneE164,
-  founder: { "@type": "Person", name: site.artist, jobTitle: "Artist and art teacher" },
+  founder: { "@type": "Person", name: site.artist, jobTitle: "Artist, art educator and author" },
   address: {
     "@type": "PostalAddress",
     streetAddress: `${site.studio.line1}, ${site.studio.line2}`,

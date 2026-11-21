@@ -63,7 +63,7 @@ export function WebMCPTools() {
           type: "object",
           properties: {
             query: { type: "string", description: "Words to match in the title, medium or description" },
-            category: { type: "string", description: "Art form, e.g. Painting, Mandala, Nippon art" },
+            category: { type: "string", description: "Art form, e.g. Painting, Mandala, Lippan art" },
             maxPriceINR: { type: "number", description: "Upper price limit in Indian Rupees, matched against the cheapest way to buy the work" },
             availableOnly: { type: "boolean", description: "Leave out works that can no longer be bought. Defaults to true." },
           },

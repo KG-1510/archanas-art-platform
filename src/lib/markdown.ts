@@ -32,7 +32,7 @@ async function home() {
     "",
     "## Pages",
     "",
-    `- [Marketplace](${u("/shop.md")}): original artworks for sale`,
+    `- [Gallery](${u("/shop.md")}): original artworks for sale`,
     `- [Services](${u("/services.md")}): classes, workshops, demos and commissions`,
     `- [About](${u("/about.md")}): about ${site.artist}`,
     `- [Contact](${u("/contact.md")})`,
@@ -59,7 +59,7 @@ async function home() {
 async function shop() {
   const [artworks, shipping] = await Promise.all([getArtworks(), getShippingRates()]);
   return [
-    `# Marketplace — ${site.name}`,
+    `# Gallery | ${site.name}`,
     "",
     "Each original is sold only once. Selected works are also sold as prints. Prices are in Indian Rupees (INR).",
     `Courier: India ${formatINR(shipping.indiaINR)}, international ${formatINR(shipping.internationalINR)}.`,
@@ -92,7 +92,7 @@ async function artwork(slug: string) {
     `- Medium: ${a.medium}`,
     `- Size: ${formatSizeWithCm(a.widthIn, a.heightIn)}`,
     ...(a.framed && a.framedWidthIn && a.framedHeightIn ? [`- Size with frame: ${formatSizeWithCm(a.framedWidthIn, a.framedHeightIn)}`] : []),
-    `- Framing: ${a.framed ? "framed" : "unframed"}`,
+    `- Framing: ${a.framed ? (a.hasGlass ? "framed behind glass (the glass is removed before the original is couriered)" : "framed") : "unframed"}`,
     ...(a.year ? [`- Year: ${a.year}`] : []),
     ...(typeof a.priceOriginalINR === "number"
       ? [`- Original: ${originalAvailable(a) ? `${formatINR(a.priceOriginalINR)}, available` : "sold"}`]
@@ -111,9 +111,9 @@ async function artwork(slug: string) {
 async function services() {
   const [list, workshops] = await Promise.all([getServices(), getUpcomingWorkshops()]);
   return [
-    `# Services — ${site.name}`,
+    `# Services | ${site.name}`,
     "",
-    `Taught and made personally by ${site.artist} in Bengaluru. To enquire, message on WhatsApp: ${whatsappLink()}`,
+    `Led and made personally by ${site.artist} in Bengaluru. To enquire, message on WhatsApp: ${whatsappLink()}`,
     "",
     ...(workshops.length
       ? [
@@ -138,9 +138,16 @@ function about() {
   return [
     `# About ${site.artist}`,
     "",
-    `${site.name} is run by ${site.artist}, who has spent more than 40 years teaching and creating art.`,
+    `${site.artist}, B.A. (Fine Arts), Ph.D. (Political Science), was born in Gwalior in 1963 and has been practising fine arts for more than 40 years. She runs ${site.name} in Bengaluru as an art academy and a painting studio.`,
     "",
-    "The studio is not built around a single medium. Painting, mandala, Nippon art and more are taught and practised under one roof.",
+    "- Exhibited in several Indian cities and at international exhibitions; numerous national and international awards.",
+    "- Works on canvas, paper and pottery, in watercolour, oil, acrylic and mixed media. Signature style: loose watercolour.",
+    "- Subjects: landscapes, seascapes, portraits, still life, flora and fauna, and folk arts such as Madhubani, Rajasthani and Tanjore.",
+    "- An art educator who has guided over 5,000 students; leads workshops for art students and corporate teams; has judged art competitions.",
+    "- Author of five books in the Loose Water Colour series.",
+    "- Ace Book of Records National Record: 62 watercolour paintings in 60 minutes at the age of 62, on 16 September 2025.",
+    "",
+    "The studio is not built around a single medium. Painting, mandala, Lippan art and more are taught and practised in one studio.",
     "",
     `Classes run at the art studio at ${site.studio.line1}, ${site.studio.line2}, ${site.studio.city} - ${site.studio.postalCode}, and at her residence at ${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.postalCode}.`,
     "",
@@ -149,13 +156,13 @@ function about() {
 }
 
 function contact() {
-  return [`# Contact — ${site.name}`, "", `The quickest way to reach ${site.artist} is WhatsApp.`, "", contactBlock()].join("\n");
+  return [`# Contact | ${site.name}`, "", `The quickest way to reach ${site.artist} is WhatsApp.`, "", contactBlock()].join("\n");
 }
 
 async function legal(slug: LegalPage["slug"]) {
   const page = await getLegalPage(slug);
   return [
-    `# ${page.title} — ${site.name}`,
+    `# ${page.title} | ${site.name}`,
     "",
     `Last updated: ${page.updated}`,
     "",
@@ -190,8 +197,8 @@ export async function llmsTxt() {
     "## Pages",
     "",
     `- [Home](${u("/index.md")})`,
-    `- [Marketplace](${u("/shop.md")}): all artworks with medium, size, price and availability`,
-    `- [Services](${u("/services.md")}): paintings, art classes, workshops, demos, mandala, Nippon art`,
+    `- [Gallery](${u("/shop.md")}): all artworks with medium, size, price and availability`,
+    `- [Services](${u("/services.md")}): paintings, art classes, workshops, demos, mandala, Lippan art`,
     `- [About](${u("/about.md")})`,
     `- [Contact](${u("/contact.md")})`,
     "",

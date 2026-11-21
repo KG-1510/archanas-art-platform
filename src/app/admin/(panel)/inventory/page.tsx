@@ -8,14 +8,14 @@ import { Notice, Thumb, when } from "../ui";
 // Waits for the sign-in check before showing anything, on purpose.
 export const instant = false;
 
-export default async function AdminStock({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+export default async function AdminInventory({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requireAdmin();
   const query = await searchParams;
   const rows = await listStock();
 
   return (
     <>
-      <h1 className="text-4xl md:text-5xl">Stock</h1>
+      <h1 className="text-4xl md:text-5xl">Inventory</h1>
       <p className="mt-4 max-w-2xl text-muted">
         Stock counts originals only. A paid order for an original takes one off automatically (test payments do not). Prints have no stock limit. Change a number
         here only to correct it, for example after selling a painting in person.
@@ -47,7 +47,7 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
                       <span className="flex items-center gap-4">
                         <Thumb src={r.image} />
                         {r.slug ? (
-                          <Link href={`/shop/${r.slug}`} className="font-medium underline underline-offset-4 hover:text-oxblood">
+                          <Link href={`/shop/${r.slug}`} className="font-medium underline underline-offset-4 hover:text-sky-700">
                             {r.title}
                           </Link>
                         ) : (
@@ -60,7 +60,7 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
                         r.stock > 0 ? (
                           <span>{formatINR(r.priceOriginalINR!)}</span>
                         ) : (
-                          <span className="text-oxblood">Sold</span>
+                          <span className="font-medium text-rose-700">Sold</span>
                         )
                       ) : (
                         <span className="text-muted">Not for sale</span>
@@ -69,7 +69,7 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
                         <form action={releaseHold} className="mt-2">
                           <input type="hidden" name="id" value={r._id} />
                           <span className="block text-sm text-muted">Held for a buyer until {when(r.reservedUntil)}</span>
-                          <button type="submit" className="text-sm underline underline-offset-4 hover:text-oxblood">
+                          <button type="submit" className="text-sm underline underline-offset-4 hover:text-sky-700">
                             Release the hold
                           </button>
                         </form>
@@ -98,7 +98,7 @@ export default async function AdminStock({ searchParams }: { searchParams: Promi
                           defaultValue={r.stock}
                           className="w-20 border border-line bg-transparent px-2 py-1.5 tabular-nums"
                         />
-                        <button type="submit" className="text-sm underline underline-offset-4 hover:text-oxblood">
+                        <button type="submit" className="text-sm underline underline-offset-4 hover:text-sky-700">
                           Save
                         </button>
                       </form>

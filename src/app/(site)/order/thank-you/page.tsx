@@ -15,7 +15,7 @@ export default function ThankYouPage() {
       </p>
       <div className="rise rise-4 mt-10 flex flex-wrap justify-center gap-4">
         <Link href="/shop" className="btn">
-          Back to the marketplace
+          Back to the gallery
         </Link>
         <a href={whatsappLink("Hello, I have just bought a painting from the website.")} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
           Message the studio

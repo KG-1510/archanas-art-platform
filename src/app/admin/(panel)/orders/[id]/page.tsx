@@ -70,8 +70,8 @@ export default async function AdminOrder({
               {c.country}
             </address>
             <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-              <a href={`tel:${c.phone}`} className="underline underline-offset-4 hover:text-oxblood">{c.phone}</a>
-              <a href={`mailto:${c.email}`} className="underline underline-offset-4 hover:text-oxblood">{c.email}</a>
+              <a href={`tel:${c.phone}`} className="underline underline-offset-4 hover:text-sky-700">{c.phone}</a>
+              <a href={`mailto:${c.email}`} className="underline underline-offset-4 hover:text-sky-700">{c.email}</a>
             </p>
           </section>
 
@@ -138,7 +138,7 @@ export default async function AdminOrder({
                 <textarea name="adminNotes" rows={3} maxLength={1000} defaultValue={order.adminNotes ?? ""} />
               </label>
               <label className="flex items-start gap-3">
-                <input type="checkbox" name="notify" defaultChecked={emailConfigured()} disabled={!emailConfigured()} className="mt-1.5 accent-oxblood" />
+                <input type="checkbox" name="notify" defaultChecked={emailConfigured()} disabled={!emailConfigured()} className="mt-1.5 accent-emerald-700" />
                 <span>
                   Email the buyer when this is first marked Shipped
                   <span className="block text-sm text-muted">

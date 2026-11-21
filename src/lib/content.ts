@@ -1,11 +1,11 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { readClient } from "@/sanity/client";
 import { seedLegal, seedServices, seedShipping } from "./seed";
-import type { Artwork, Book, LegalPage, Photo, Service, ShippingRates, Testimonial, Workshop } from "./types";
+import type { Artwork, Book, LegalPage, Photo, Service, SizedPhoto, ShippingRates, Testimonial, Workshop } from "./types";
 
 // Field names on the website differ slightly from the studio's, so the mapping lives here.
 const ARTWORK_FIELDS = `_id, title, "slug": slug.current, category, medium, widthIn, heightIn,
-  "framed": framed == "framed", framedWidthIn, framedHeightIn, year,
+  "framed": framed == "framed", framedWidthIn, framedHeightIn, "hasGlass": framed == "framed" && hasGlass == true, year,
   "description": coalesce(description, ""),
   "imageUrl": image.asset->url, "imageAlt": image.alt, "imageAspect": image.asset->metadata.dimensions.aspectRatio,
   "gallery": coalesce(additionalImages[defined(asset)]{ "url": asset->url, alt }, []),
@@ -31,7 +31,12 @@ export async function getArtwork(slug: string): Promise<Artwork | null> {
 export async function getFeaturedArtworks(): Promise<Artwork[]> {
   const all = await getArtworks();
   const featured = all.filter((a) => a.featured);
-  return (featured.length ? featured : all).slice(0, 3);
+  // Up to six, by name (so "… - 1" comes before "… - 6"): the homepage shows all six on wide
+  // screens and the first three on phones.
+  return (featured.length ? featured : all)
+    .slice()
+    .sort((x, y) => x.title.localeCompare(y.title, "en", { numeric: true }))
+    .slice(0, 6);
 }
 
 export async function getServices(): Promise<Service[]> {
@@ -40,7 +45,7 @@ export async function getServices(): Promise<Service[]> {
   cacheTag("services");
   if (!readClient) return seedServices;
   const rows = await readClient.fetch<Service[]>(
-    `*[_type == "service" && defined(slug.current)] | order(coalesce(order, 99) asc) { _id, title, "slug": slug.current, summary, "details": coalesce(details, []) }`,
+    `*[_type == "service" && defined(slug.current)] | order(coalesce(order, 99) asc) { _id, title, "slug": slug.current, summary, "details": coalesce(details, []), "imageUrl": image.asset->url, "imageAlt": image.alt }`,
   );
   return rows.length ? rows : seedServices;
 }
@@ -94,17 +99,19 @@ export async function getLegalPage(slug: LegalPage["slug"]): Promise<LegalPage> 
   return row ?? fallback;
 }
 
-type Settings = { shipping: ShippingRates; aboutPhotos: Photo[] };
+type Settings = { shipping: ShippingRates; aboutPhotos: Photo[]; classPhotos: SizedPhoto[] };
 
 async function getSettings(): Promise<Settings> {
   "use cache";
   cacheLife("minutes");
   cacheTag("settings");
-  const empty: Settings = { shipping: seedShipping, aboutPhotos: [] };
+  const empty: Settings = { shipping: seedShipping, aboutPhotos: [], classPhotos: [] };
   if (!readClient) return empty;
-  const row = await readClient.fetch<{ indiaINR?: number; internationalINR?: number; aboutPhotos?: Photo[] } | null>(
+  const row = await readClient.fetch<{ indiaINR?: number; internationalINR?: number; aboutPhotos?: Photo[]; classPhotos?: SizedPhoto[] } | null>(
     `*[_type == "siteSettings"][0]{ "indiaINR": shippingIndiaINR, "internationalINR": shippingInternationalINR,
-      "aboutPhotos": coalesce(aboutPhotos[defined(asset)]{ "url": asset->url, alt }, []) }`,
+      "aboutPhotos": coalesce(aboutPhotos[defined(asset)]{ "url": asset->url, alt }, []),
+      "classPhotos": coalesce(classPhotos[defined(asset)]{ "url": asset->url, alt,
+        "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height }, []) }`,
   );
   return {
     shipping: {
@@ -112,11 +119,17 @@ async function getSettings(): Promise<Settings> {
       internationalINR: row?.internationalINR ?? seedShipping.internationalINR,
     },
     aboutPhotos: row?.aboutPhotos ?? [],
+    classPhotos: row?.classPhotos ?? [],
   };
 }
 
 export async function getShippingRates(): Promise<ShippingRates> {
   return (await getSettings()).shipping;
+}
+
+/** Photos of classes and students' work, managed in Sanity → Site settings. */
+export async function getClassPhotos(): Promise<SizedPhoto[]> {
+  return (await getSettings()).classPhotos;
 }
 
 export async function getAboutPhotos(): Promise<Photo[]> {

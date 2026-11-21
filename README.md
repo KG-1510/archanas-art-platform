@@ -1,6 +1,6 @@
 # Archana's Art
 
-Portfolio and marketplace for **Archana's Art**, the studio of Dr. Archana Gupta in Bengaluru: original one-off paintings to buy, plus art classes, workshops, demos, mandala and Nippon art.
+Portfolio and marketplace for **Archana's Art**, the studio of Dr. Archana Gupta in Bengaluru: original one-off paintings to buy, plus art classes, workshops, demos, mandala and Lippan art.
 
 Brand facts, palette and fonts live in [docs/BRAND.md](docs/BRAND.md).
 
@@ -90,6 +90,16 @@ A painting needs at least one price. Press **Publish**; it appears on the site w
 2. Add a webhook pointing at `https://<your-domain>/api/razorpay/webhook`, subscribed to `payment.captured`, and put its secret in `RAZORPAY_WEBHOOK_SECRET`.
 3. Enable international payments in the Razorpay dashboard to accept foreign cards.
 
+## Photos kept in Sanity
+
+To keep the repository small, these live in Sanity → Site settings, not in the code:
+
+- **Class and student photos**: the homepage shows the first five, the Services page shows all.
+- **A photo for each service** (Services text → Photo): used in the homepage gallery of services.
+- **About page photos**: up to three.
+
+Sanity serves them as WebP or AVIF automatically.
+
 ## Test and live payments
 
 | Where | Razorpay keys | What happens |
@@ -105,7 +115,7 @@ A live key outside production is refused, so nothing there can charge a card. In
 
 - **Dashboard**: orders to pack, packed, shipped and delivered; sales this month and in total; originals in stock.
 - **Orders**: every paid order with the buyer's address. Set it to To pack, Packed, Shipped, Delivered or Cancelled, and record the courier and tracking number. Marking an order Shipped can email the buyer.
-- **Stock**: originals in stock per painting, what has sold online, and a way to correct a number or release a buyer's 15-minute hold.
+- **Inventory**: originals in stock per painting, what has sold online, and a way to correct a number or release a buyer's 15-minute hold.
 
 Setting it up:
 

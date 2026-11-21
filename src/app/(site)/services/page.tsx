@@ -4,11 +4,12 @@ import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
+import { StudentGallery } from "@/components/StudentGallery";
 import { VelocityMarquee } from "@/components/VelocityMarquee";
 import { Effect122 } from "@/components/mwg/Effect122";
 import { ParadeMedia } from "@/components/mwg/ParadeMedia";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
-import { getArtworks, getServices, getUpcomingWorkshops } from "@/lib/content";
+import { getArtworks, getClassPhotos, getServices, getUpcomingWorkshops } from "@/lib/content";
 import { formatDate, formatINR } from "@/lib/format";
 import { pageMeta } from "@/lib/meta";
 import { site, whatsappLink } from "@/lib/site";
@@ -16,7 +17,7 @@ import { site, whatsappLink } from "@/lib/site";
 export const metadata = pageMeta(
   "/services",
   "Services",
-  "Art classes, workshops, demos, mandala, Nippon art and commissioned paintings with Dr. Archana Gupta in Bengaluru.",
+  "Art classes, workshops, demos, mandala, Lippan art and commissioned paintings with Dr. Archana Gupta in Bengaluru.",
 );
 
 // Answers here repeat facts stated elsewhere on the site; nothing new is promised.
@@ -44,13 +45,13 @@ const FAQS = [
 ];
 
 export default async function ServicesPage() {
-  const [services, artworks, workshops] = await Promise.all([getServices(), getArtworks(), getUpcomingWorkshops()]);
+  const [services, artworks, workshops, classPhotos] = await Promise.all([getServices(), getArtworks(), getUpcomingWorkshops(), getClassPhotos()]);
   const parade = artworks.filter((a) => a.imageUrl).slice(0, 8);
 
   return (
     <>
-      <PageIntro eyebrow="Our services" title="Learn it, watch it made, or have it made for you">
-        <p>Each of these is arranged personally, so the first step is always a conversation.</p>
+      <PageIntro eyebrow="Learn with Dr. Archana" title="From first brushstroke to finished piece">
+        <p>Classes, workshops and demonstrations in every art form she practises, led in person. It always begins with a conversation.</p>
       </PageIntro>
 
       {/* Upcoming workshops and class batches: shown once some are added in Sanity */}
@@ -133,6 +134,24 @@ export default async function ServicesPage() {
         <Effect122>
           <ParadeMedia artworks={parade} />
         </Effect122>
+      ) : null}
+
+      {/* Students and their work: shown once photos are added in Sanity */}
+      {classPhotos.length ? (
+      <section aria-labelledby="students-title" className="border-t border-line bg-surface py-24 md:py-28">
+        <Reveal className="shell">
+          <p className="eyebrow">In the classroom</p>
+          <h2 id="students-title" className="mega mt-4 max-w-4xl text-4xl md:text-6xl">
+            Students, and what they <em className="text-oxblood">made</em>
+          </h2>
+          <p className="mt-6 max-w-2xl text-lg text-muted">
+            Pastel, oils, watercolour, mandala, relief work: students move between forms, and each one leaves with work of their own.
+          </p>
+        </Reveal>
+        <div className="mt-12">
+          <StudentGallery />
+        </div>
+      </section>
       ) : null}
 
       {/* Questions: Annnimate Accordion */}

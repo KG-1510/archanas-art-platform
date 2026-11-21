@@ -5,13 +5,13 @@ import type { LegalPage, Service, ShippingRates } from "./types";
 export const seedServices: Service[] = [
   {
     _id: "svc-paintings", slug: "paintings", title: "Paintings",
-    summary: "Original paintings by Dr. Archana Gupta, available from the marketplace as originals or prints, or made to commission.",
+    summary: "Original paintings by Dr. Archana Gupta, available from the gallery as originals or prints, or made to commission.",
     details: ["Originals are one of a kind. Selected works are also available as prints.", "Commissions are discussed one to one: subject, size, medium and timeline.", "Couriered across India and internationally."],
   },
   {
     _id: "svc-classes", slug: "art-classes", title: "Art Classes",
     summary: "Regular classes for beginners and practising artists, taught personally at the studio and at the residence in Bengaluru.",
-    details: ["Many art forms taught under one roof.", "Guidance shaped by 40+ years of teaching.", "Message on WhatsApp for current batches and timings."],
+    details: ["Many art forms in one studio.", "Guidance shaped by 40+ years of art.", "Message on WhatsApp for current batches and timings."],
   },
   {
     _id: "svc-workshops", slug: "workshops", title: "Workshops",
@@ -26,12 +26,27 @@ export const seedServices: Service[] = [
   {
     _id: "svc-mandala", slug: "mandala", title: "Mandala",
     summary: "Mandala art: learn the geometry, patterning and patience behind it, or commission a finished piece.",
-    details: ["Taught step by step, from grid to detailing.", "Finished mandala works appear in the marketplace."],
+    details: ["Taught step by step, from grid to detailing.", "Finished mandala works appear in the gallery."],
   },
   {
-    _id: "svc-nippon", slug: "nippon-art", title: "Nippon Art",
-    summary: "Nippon art taught and created at the studio, with finished pieces available to buy.",
-    details: ["Learn the technique from the basics.", "Finished Nippon works appear in the marketplace."],
+    _id: "svc-lippan", slug: "lippan-art", title: "Lippan Art",
+    summary: "Lippan art taught and created at the studio, with finished pieces available to buy.",
+    details: ["Learn the technique from the basics.", "Finished Lippan works appear in the gallery."],
+  },
+  {
+    _id: "svc-glass", slug: "glass-painting", title: "Glass Painting",
+    summary: "Painting on glass, taught at the studio from the first outline to the finished piece.",
+    details: ["Learn the technique from the basics.", "Ask about batches and commissioned pieces."],
+  },
+  {
+    _id: "svc-fabric", slug: "fabric-painting", title: "Fabric Painting",
+    summary: "Painting on fabric, taught at the studio for beginners and practising artists.",
+    details: ["Learn the technique from the basics.", "Ask about batches and commissioned pieces."],
+  },
+  {
+    _id: "svc-pot", slug: "pot-painting", title: "Pot Painting",
+    summary: "Painting on pots and pottery, taught at the studio and made to order.",
+    details: ["Learn the technique from the basics.", "Ask about batches and commissioned pieces."],
   },
 ];
 
@@ -63,10 +78,11 @@ export const seedLegal: LegalPage[] = [
     ],
   },
   {
-    slug: "shipping-returns", title: "Shipping & Returns", updated: "2026-11-14", intro: "",
+    slug: "shipping-returns", title: "Shipping & Returns", updated: "2026-11-21", intro: "",
     sections: [
       { heading: "Where we ship", body: "We courier paintings across India and internationally." },
       { heading: "Packing and dispatch", body: "Each painting is packed by hand for safe transit. We will share the courier name and tracking number once your order is dispatched." },
+      { heading: "Paintings framed behind glass", body: "Glass can break in transit and damage the painting. To prevent a damaged item reaching you, if an artwork is framed behind glass, the glass is removed before the artwork is couriered. The painting and its frame are sent without the glass. Paintings with glass are marked on their page." },
       { heading: "Courier charges", body: "Standard courier is ₹500 within India and ₹2,000 for international delivery, added at checkout. These charges are subject to change; the charge shown at checkout before you pay is the one that applies to your order." },
       { heading: "International orders", body: "Customs duties, import taxes and clearance fees charged by the destination country are paid by the buyer and are not included in our prices." },
       { heading: "Damage in transit", body: "If your painting arrives damaged, contact us within 48 hours of delivery with photographs of the packaging and the artwork, and we will work out a repair, replacement or refund with you." },

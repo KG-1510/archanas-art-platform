@@ -13,6 +13,8 @@ export type Artwork = {
   /** Outer size including the frame, in inches. Only for framed works. */
   framedWidthIn?: number;
   framedHeightIn?: number;
+  /** The frame has glass, which is removed before the original is couriered. */
+  hasGlass?: boolean;
   year?: number;
   description: string;
   imageUrl?: string;
@@ -41,6 +43,9 @@ export type Service = {
   slug: string;
   summary: string;
   details: string[];
+  /** A photo for this service, set in Sanity. */
+  imageUrl?: string;
+  imageAlt?: string;
 };
 
 export type Workshop = {
@@ -84,3 +89,7 @@ export interface Book {
   amazonUrl?: string;
   year?: number;
 }
+
+/** A photo with its pixel size, so the page can reserve the right space for it. */
+export type SizedPhoto = { url: string; alt?: string; width: number; height: number };
+

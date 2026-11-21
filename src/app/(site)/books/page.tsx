@@ -8,7 +8,7 @@ import { getBooks } from "@/lib/content";
 import { pageMeta } from "@/lib/meta";
 import { site, whatsappLink } from "@/lib/site";
 
-export const metadata = pageMeta("/books", "Books", `Books written by ${site.artist}, artist, teacher and author. Available on Amazon.`);
+export const metadata = pageMeta("/books", "Books", `Books written by ${site.artist}, artist, art educator and author. Available on Amazon.`);
 
 export default async function BooksPage() {
   const books = await getBooks();
@@ -30,8 +30,8 @@ export default async function BooksPage() {
           </h1>
           <p className="rise rise-3 mt-8 max-w-xl text-lg text-muted md:text-xl">
             {books.length
-              ? `Forty years of teaching, set down on the page. ${books.length} books, in her own words and paintings.`
-              : "Forty years of teaching, set down on the page."}
+              ? `What she shares in the studio, set down on the page. ${books.length} books, in her own words and paintings.`
+              : "What she shares in the studio, set down on the page."}
           </p>
         </div>
         <ArtistPortrait priority sizes="(min-width: 768px) 34vw, 92vw" className="unveil" />

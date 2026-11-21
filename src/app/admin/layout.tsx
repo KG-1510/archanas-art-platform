@@ -8,5 +8,5 @@ export const metadata: Metadata = { title: "Admin", robots: { index: false, foll
 export const instant = false;
 
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
-  return <div className="flex min-h-screen flex-col bg-ivory text-[1rem]">{children}</div>;
+  return <div className="aa-admin flex min-h-screen flex-col bg-stone-50 text-[1rem]">{children}</div>;
 }

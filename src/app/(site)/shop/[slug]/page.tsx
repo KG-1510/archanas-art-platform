@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ArtworkImage } from "@/components/ArtworkCard";
+import { ArtworkZoom } from "@/components/ArtworkZoom";
 import { JsonLd } from "@/components/JsonLd";
 import { ShareButton } from "@/components/ShareButton";
 import { WhatsAppIcon } from "@/components/WhatsAppButton";
@@ -88,37 +88,20 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
   return (
     <article className="shell grid gap-12 pt-10 pb-24 md:grid-cols-[1.1fr_0.9fr] md:gap-16 md:pt-16 md:pb-32">
       <div className="unveil md:sticky md:top-28 md:self-start">
-        <div className="border border-line bg-surface p-4 md:p-6">
+        <ArtworkZoom
+          photos={[
+            ...(artwork.imageUrl ? [{ url: artwork.imageUrl, alt: artwork.imageAlt || `${artwork.title}, ${artwork.medium}` }] : []),
+            ...artwork.gallery.map((photo) => ({ url: photo.url, alt: photo.alt || `${artwork.title}, detail` })),
+          ]}
+        >
           <ArtworkImage artwork={artwork} priority natural sizes="(min-width: 768px) 52vw, 92vw" className="aspect-[4/5]" />
-        </div>
-        {artwork.gallery.length ? (
-          <ul aria-label="More photographs" className="mt-4 grid grid-cols-4 gap-3">
-            {artwork.gallery.map((photo) => (
-              <li key={photo.url}>
-                <a
-                  href={`${photo.url}?w=1800&auto=format`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative block aspect-square overflow-hidden border border-line bg-surface"
-                >
-                  <Image
-                    src={photo.url}
-                    alt={photo.alt || `${artwork.title}, detail`}
-                    fill
-                    sizes="(min-width: 768px) 12vw, 22vw"
-                    className="object-cover transition-transform duration-700 ease-luxe hover:scale-105"
-                  />
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        </ArtworkZoom>
       </div>
 
       <div>
         <nav aria-label="Breadcrumb" className="rise text-[0.8rem] font-medium uppercase tracking-[0.2em] text-muted">
           <Link href="/shop" className="hover:text-oxblood">
-            Marketplace
+            Gallery
           </Link>{" "}
           / <span>{artwork.category}</span>
         </nav>
@@ -126,12 +109,12 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
         <h1 className="rise rise-2 mt-6 text-5xl md:text-7xl">{artwork.title}</h1>
         {/* Sits above the text below it, so its menu is never covered. */}
         <div className="relative z-10 mt-5">
-          <ShareButton title={`${artwork.title} — ${site.name}`} text={`${artwork.title}, by ${site.artist}.`} url={url} />
+          <ShareButton title={`${artwork.title} | ${site.name}`} text={`Take a look at "${artwork.title}", an original painting by ${site.artist}.`} url={url} />
         </div>
 
         {artwork.description ? <p className="rise rise-3 mt-8 max-w-xl whitespace-pre-line text-muted">{artwork.description}</p> : null}
 
-        <dl className="rise rise-3 mt-10 grid grid-cols-[11rem_1fr] gap-y-4 border-y border-line py-8 text-[0.95rem]">
+        <dl className="rise rise-3 mt-10 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-4 md:gap-x-10 border-y border-line py-8 text-[0.95rem]">
           <dt className="eyebrow self-center">Medium</dt>
           <dd>{artwork.medium}</dd>
           <dt className="eyebrow self-center">Size (L × W)</dt>
@@ -143,7 +126,7 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
             </>
           ) : null}
           <dt className="eyebrow self-center">Framing</dt>
-          <dd>{artwork.framed ? "Framed" : "Unframed"}</dd>
+          <dd>{artwork.framed ? (artwork.hasGlass ? "Framed, behind glass" : "Framed") : "Unframed"}</dd>
           {artwork.year ? (
             <>
               <dt className="eyebrow self-center">Year</dt>
@@ -163,62 +146,76 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
           </dd>
         </dl>
 
-        {/* Two ways to buy: the original, and a print. */}
-        <div className="rise rise-4 mt-10 flex flex-col gap-5">
+        {/* Glass is taken out before an original is couriered, so nothing arrives broken. */}
+        {artwork.hasGlass && hasOriginal ? (
+          <p role="note" className="rise rise-4 mt-8 flex gap-3 border border-amber-300 bg-amber-50 px-4 py-3 text-[0.95rem] leading-relaxed text-amber-950">
+            <svg viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 text-amber-700" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5" />
+              <path d="M12 11v5M12 7.8v.2" />
+            </svg>
+            <span>
+              <strong className="font-medium">This painting is framed behind glass.</strong> To keep it safe in transit, the glass is
+              removed before the original is couriered. The painting and its frame are sent; the glass is not.
+            </span>
+          </p>
+        ) : null}
+
+        {/* One buying panel: the original and the print as two rows, then help and payment notes. */}
+        <section aria-label="Buy this painting" className={`rise rise-4 border border-line ${artwork.hasGlass && hasOriginal ? "mt-5" : "mt-10"}`}>
           {hasOriginal ? (
-            <section aria-label="Original" className="flex flex-wrap items-center justify-between gap-4 border border-line p-5">
+            <div className="grid grid-cols-[1fr_auto_auto] items-center gap-x-4 px-4 py-3.5 sm:gap-x-5 sm:px-5">
               <div>
-                <h2 className="font-display text-2xl">Original</h2>
-                <p className="mt-1 text-sm text-muted">
-                  {canBuyOriginal ? "The painting itself, signed by the artist." : "The original has found a home."}
-                </p>
+                <h2 className="font-display text-xl">Original</h2>
+                <p className="text-sm leading-snug text-muted">{canBuyOriginal ? "Signed by the artist." : "The original has found a home."}</p>
               </div>
               {canBuyOriginal ? (
-                <div className="flex flex-wrap items-center gap-5">
-                  <p className="text-2xl font-medium tabular-nums">{formatINR(artwork.priceOriginalINR!)}</p>
-                  <Link href={`/checkout/${artwork.slug}?item=original`} className="btn">
-                    Buy the original
+                <>
+                  <p className="text-lg font-medium tabular-nums sm:text-xl">{formatINR(artwork.priceOriginalINR!)}</p>
+                  <Link href={`/checkout/${artwork.slug}?item=original`} aria-label="Buy the original" className="btn !px-4 !py-2.5 !tracking-[0.14em]">
+                    Buy
                   </Link>
-                </div>
+                </>
               ) : (
                 <p className="eyebrow text-base">Sold</p>
               )}
-            </section>
+            </div>
           ) : null}
 
           {canBuyPrint ? (
-            <section aria-label="Print" className="flex flex-wrap items-center justify-between gap-4 border border-line p-5">
+            <div className={`grid grid-cols-[1fr_auto_auto] items-center gap-x-4 px-4 py-3.5 sm:gap-x-5 sm:px-5 ${hasOriginal ? "border-t border-line" : ""}`}>
               <div>
-                <h2 className="font-display text-2xl">Print</h2>
-                <p className="mt-1 text-sm text-muted">{artwork.printDetails || "A reproduction of this painting."}</p>
+                <h2 className="font-display text-xl">Print</h2>
+                <p className="text-sm leading-snug text-muted">{artwork.printDetails || "A reproduction."}</p>
               </div>
-              <div className="flex flex-wrap items-center gap-5">
-                <p className="text-2xl font-medium tabular-nums">{formatINR(artwork.pricePrintINR!)}</p>
-                <Link href={`/checkout/${artwork.slug}?item=print`} className={canBuyOriginal ? "btn btn-ghost" : "btn"}>
-                  Buy a print
-                </Link>
-              </div>
-            </section>
+              <p className="text-lg font-medium tabular-nums sm:text-xl">{formatINR(artwork.pricePrintINR!)}</p>
+              <Link
+                href={`/checkout/${artwork.slug}?item=print`}
+                aria-label="Buy a print"
+                className={`${canBuyOriginal ? "btn btn-ghost" : "btn"} !px-4 !py-2.5 !tracking-[0.14em]`}
+              >
+                Buy
+              </Link>
+            </div>
           ) : null}
 
-          <a
-            href={whatsappLink(`Hello, I am interested in "${artwork.title}"${artwork.code ? `, code ${artwork.code}` : ""} (${url}).`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost self-start"
-          >
-            <WhatsAppIcon className="h-4 w-4" />
-            Ask on WhatsApp
-          </a>
-        </div>
-
-        <p className="mt-8 max-w-xl text-sm text-muted">
-          Secure payment by Razorpay. See{" "}
-          <Link href="/shipping-returns" className="underline underline-offset-4 hover:text-oxblood">
-            shipping and returns
-          </Link>
-          .
-        </p>
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line bg-surface px-4 py-3 text-sm text-muted sm:px-5">
+            <a
+              href={whatsappLink(`Hello, I am interested in "${artwork.title}"${artwork.code ? `, code ${artwork.code}` : ""} (${url}).`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-medium text-ink underline underline-offset-4 hover:text-oxblood"
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+              Ask on WhatsApp
+            </a>
+            <span>
+              Secure payment by Razorpay.{" "}
+              <Link href="/shipping-returns" className="underline underline-offset-4 hover:text-oxblood">
+                Shipping and returns
+              </Link>
+            </span>
+          </div>
+        </section>
       </div>
 
       <JsonLd

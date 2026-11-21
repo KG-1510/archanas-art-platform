@@ -58,7 +58,11 @@ export function PriceLine({ artwork }: { artwork: Artwork }) {
   );
 }
 
-export function ArtworkCard({ artwork }: { artwork: Artwork }) {
+/**
+ * `uniform` gives every card the same 4:3 frame, with the whole painting centred inside it,
+ * so names and prices line up across a row. Without it the frame takes each painting's own shape.
+ */
+export function ArtworkCard({ artwork, uniform = false }: { artwork: Artwork; uniform?: boolean }) {
   return (
     <article className="art-card group flex flex-col">
       <Link href={`/shop/${artwork.slug}`} className="block">
@@ -66,8 +70,8 @@ export function ArtworkCard({ artwork }: { artwork: Artwork }) {
           <ArtworkImage
             artwork={artwork}
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
-            natural
-            className="art-photo aspect-[4/5]"
+            natural={!uniform}
+            className={`art-photo ${uniform ? "aspect-[4/3]" : "aspect-[4/5]"}`}
           />
         </ClipReveal>
         <div className="mt-5 flex flex-col gap-1">

@@ -1,7 +1,7 @@
 import { defineArrayMember, defineField, defineType, type SchemaTypeDefinition } from "sanity";
 
 /** Art forms offered in the marketplace filter. Add a line here to add a new one. */
-export const ART_FORMS = ["Painting", "Mandala", "Nippon art", "Sketch", "Craft", "Other"];
+export const ART_FORMS = ["Painting", "Mandala", "Lippan art", "Glass painting", "Fabric painting", "Pot painting", "Sketch", "Craft", "Other"];
 
 const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
 
@@ -109,6 +109,11 @@ const artwork = defineType({
       hidden: ({ document }) => document?.framed !== "framed",
       validation: (r) => r.positive(),
     }),
+    defineField({
+      name: "hasGlass", title: "Framed behind glass", type: "boolean", group: "size", initialValue: false,
+      description: "Switch on if the frame has glass. The painting page then tells buyers the glass is removed before the original is couriered.",
+      hidden: ({ document }) => document?.framed !== "framed",
+    }),
 
     // --- Price & stock --------------------------------------------------------
     defineField({
@@ -133,7 +138,7 @@ const artwork = defineType({
     }),
     defineField({
       name: "featured", title: "Show on the homepage", type: "boolean", group: "sale", initialValue: false,
-      description: "The homepage shows up to three featured paintings.",
+      description: "The homepage shows up to six featured paintings, newest first.",
     }),
     defineField({
       name: "reservedUntil", title: "Original held for a buyer until", type: "datetime", group: "sale", readOnly: true,
@@ -171,6 +176,11 @@ const service = defineType({
     defineField({ name: "order", title: "Position on the page", description: "1 appears first.", type: "number" }),
     defineField({ name: "summary", description: "One or two sentences.", type: "text", rows: 3, validation: (r) => r.required() }),
     defineField({ name: "details", title: "Key points", type: "array", of: [defineArrayMember({ type: "string" })] }),
+    defineField({
+      name: "image", title: "Photo", type: "image", options: { hotspot: true },
+      description: "A tall photo works best. Shown beside this service's name on the homepage.",
+      fields: [defineField({ name: "alt", title: "What this photo shows", type: "string" })],
+    }),
   ],
   orderings: [{ title: "Position on the page", name: "order", by: [{ field: "order", direction: "asc" }] }],
 });
@@ -293,6 +303,17 @@ const siteSettings = defineType({
       ],
       options: { layout: "grid" },
       validation: (r) => r.max(3),
+    }),
+    defineField({
+      name: "classPhotos", title: "Class and student photos", type: "array",
+      description: "Shown on the homepage (the first five) and on the Services page (all of them). Drag to reorder.",
+      of: [
+        defineArrayMember({
+          type: "image",
+          fields: [defineField({ name: "alt", title: "What this photo shows", type: "string" })],
+        }),
+      ],
+      options: { layout: "grid" },
     }),
   ],
   preview: { prepare: () => ({ title: "Site settings" }) },

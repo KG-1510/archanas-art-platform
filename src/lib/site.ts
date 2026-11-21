@@ -13,9 +13,9 @@ const siteUrl = (
 export const site = {
   name: "Archana's Art",
   artist: "Dr. Archana Gupta",
-  tagline: "Original paintings and art classes in Bengaluru",
+  tagline: "Original paintings and art classes by Dr. Archana Gupta",
   description:
-    "Archana's Art is the studio of Dr. Archana Gupta in Bengaluru: original one-off paintings to buy, and classes, workshops and demos across art forms, drawing on 40+ years of teaching and creating.",
+    "Step into the artistic world of Dr. Archana Gupta. Buy her original paintings and prints, or learn to paint with her at her studio in Bengaluru: classes, workshops and demonstrations across art forms.",
   url: siteUrl,
   phoneDisplay: "+91 89716 85880",
   phoneE164: "+918971685880",
@@ -55,7 +55,7 @@ export function whatsappLink(message?: string) {
 }
 
 export const nav = [
-  { href: "/shop", label: "Marketplace" },
+  { href: "/shop", label: "Gallery" },
   { href: "/services", label: "Services" },
   { href: "/books", label: "Books" },
   { href: "/about", label: "About" },

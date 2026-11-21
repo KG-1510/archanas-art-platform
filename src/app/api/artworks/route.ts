@@ -18,6 +18,7 @@ export async function GET() {
       widthIn: a.widthIn,
       heightIn: a.heightIn,
       framed: a.framed,
+      hasGlass: Boolean(a.hasGlass),
       framedWidthIn: a.framedWidthIn ?? null,
       framedHeightIn: a.framedHeightIn ?? null,
       year: a.year ?? null,

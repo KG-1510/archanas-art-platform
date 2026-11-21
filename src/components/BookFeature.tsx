@@ -41,7 +41,7 @@ export function BookFeature({ book, flip = false, headingLevel = "h2" }: { book:
             <p className="mt-8 max-w-xl text-muted">Interested in this one? Send the studio a message and we will tell you how to get a copy.</p>
           )}
           {book.amazonUrl ? (
-            <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer" className="btn mt-10">
+            <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer" className="btn relative mt-10">
               <AmazonIcon className="h-5 w-5" />
               Buy on Amazon
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

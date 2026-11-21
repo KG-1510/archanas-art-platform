@@ -14,26 +14,71 @@ import { site } from "@/lib/site";
 export const metadata = pageMeta(
   "/about",
   "About",
-  `${site.artist} is an artist, teacher and author with 40+ years of teaching and creating art across forms. Archana's Art is her studio in Bengaluru.`,
+  `${site.artist} is an artist, art educator and author with 40+ years in fine art. Archana's Art is her studio in Bengaluru.`,
 );
 
+// From the artist's own write-up. Keep docs/BRAND.md in step when these change.
 const CHAPTERS: { title: string; text: ReactNode }[] = [
   {
-    title: "A life in the studio",
+    title: "Where it began",
     text: (
-      <p>
-        Archana&rsquo;s Art is run by {site.artist}. For over four decades she has been doing two things side by side:
-        making her own work, and teaching others to make theirs.
-      </p>
+      <>
+        <p>
+          {site.artist} was born in Gwalior in 1963. She holds a B.A. in Fine Arts and a Ph.D. in Political Science, and has
+          been practising fine arts for 40+ years.
+        </p>
+        <p className="mt-4">
+          Her work has been exhibited in several Indian cities and at international exhibitions, and she has received
+          numerous national and international awards.
+        </p>
+      </>
     ),
   },
   {
-    title: "All art forms, one roof",
+    title: "Loose watercolour, and much else",
     text: (
-      <p>
-        The studio is not built around a single medium. Painting, mandala, Nippon art and more are taught and
-        practised here, so a student can move between forms without changing teachers.
-      </p>
+      <>
+        <p>
+          She has worked on canvas, paper and pottery, in watercolour, oil, acrylic and mixed media. Her signature style
+          is loose watercolour.
+        </p>
+        <p className="mt-4">
+          Her subjects range across landscapes, seascapes, portraits, still life, flora and fauna, and folk arts such as
+          Madhubani, Rajasthani and Tanjore painting.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Educator to more than 5,000",
+    text: (
+      <>
+        <p>
+          As an art educator she has guided over 5,000 students, and still does. She has led workshops for serious art students and
+          for corporate teams, and has judged several art competitions.
+        </p>
+        <p className="mt-4">Her paintings hang in homes, clubs, hotels and art galleries around the world.</p>
+      </>
+    ),
+  },
+  {
+    title: "Author of five books",
+    text: (
+      <>
+        <p>
+          She is the author of five books in the Loose Water Colour series: Flowers, Marine, Atmospheric Landscapes,
+          Impressionist Landscapes and Incredible India.
+        </p>
+        <p className="mt-4">
+          Further books are planned on plein air painting, mixed media and a handbook of art, written for students and art
+          teachers alike.
+        </p>
+        <p className="mt-4">
+          <Link href="/books" className="link-line">
+            See her books
+          </Link>
+        </p>
+      </>
     ),
   },
   {
@@ -41,8 +86,9 @@ const CHAPTERS: { title: string; text: ReactNode }[] = [
     text: (
       <>
         <p>
-          Classes run at the art studio at {site.studio.line1}, {site.studio.line2}, {site.studio.city}, and at her
-          residence at {site.address.line1}, {site.address.line2}, {site.address.city}.
+          She is based in Bengaluru, where she runs Archana&rsquo;s Art as an art academy and a painting studio. Classes run
+          at the studio at {site.studio.line1}, {site.studio.line2}, {site.studio.city}, and at her residence at{" "}
+          {site.address.line1}, {site.address.line2}, {site.address.city}.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
           <a href={site.maps.studio} target="_blank" rel="noopener noreferrer" className="link-line">
@@ -57,24 +103,42 @@ const CHAPTERS: { title: string; text: ReactNode }[] = [
   },
 ];
 
+// The clipped gallery (Made With GSAP effect 121) takes one photo per chapter; Site settings holds up to three.
+const GALLERY_CHAPTERS = 3;
+
+function ChapterList({ chapters }: { chapters: typeof CHAPTERS }) {
+  return (
+    <section className="shell pb-10">
+      {chapters.map((c) => (
+        <Reveal key={c.title}>
+          <article className="grid gap-6 border-t border-line py-12 md:grid-cols-[0.8fr_1.2fr] md:gap-14 md:py-16">
+            <h2 className="mega text-3xl md:text-5xl">{c.title}</h2>
+            <div className="max-w-xl text-lg text-muted">{c.text}</div>
+          </article>
+        </Reveal>
+      ))}
+    </section>
+  );
+}
+
 export default async function AboutPage() {
   const photos = await getAboutPhotos();
   const intro = (
     <header className="intro shell grid items-center gap-12 pt-16 pb-16 md:grid-cols-[1.25fr_0.75fr] md:gap-20 md:pt-24 md:pb-24">
       <div>
-        <p className="eyebrow rise">About</p>
+        <p className="eyebrow rise">The artist</p>
         <h1 className="mega mt-6 text-[clamp(2.4rem,5.6vw,5.6rem)]">
           <span className="line" style={{ "--i": 0 } as React.CSSProperties}>
-            <span>{site.artist},</span>
+            <span>Meet {site.artist},</span>
           </span>
           <span className="line" style={{ "--i": 1 } as React.CSSProperties}>
             <span>
-              <em className="text-oxblood">artist</em>, <em className="text-oxblood">teacher</em>, <em className="text-oxblood">author</em>
+              <em className="text-oxblood">artist</em>, <em className="text-oxblood">educator</em>, <em className="text-oxblood">author</em>
             </span>
           </span>
         </h1>
         <p className="rise rise-3 mt-8 max-w-xl text-lg text-muted md:text-xl">
-          More than forty years of teaching and creating, across every art form she could learn.
+          Painter, art educator and author. The artistic world you are standing in is hers, built over 40+ years of art and still growing.
         </p>
       </div>
       <ArtistPortrait priority sizes="(min-width: 768px) 34vw, 92vw" className="unveil" />
@@ -83,37 +147,32 @@ export default async function AboutPage() {
 
   return (
     <>
-      {photos.length >= CHAPTERS.length ? (
-        // Made With GSAP effect 121, clipped sections gallery. Needs one photo per chapter
-        // (Sanity → Site settings → About page photos).
-        <Effect121
-          hero={intro}
-          sections={CHAPTERS.map((c, i) => ({
-            ...c,
-            // eslint-disable-next-line @next/next/no-img-element
-            media: <img src={`${photos[i].url}?w=1400&auto=format`} alt={photos[i].alt || ""} loading="lazy" decoding="async" />,
-          }))}
-        />
+      {photos.length >= GALLERY_CHAPTERS ? (
+        <>
+          {/* Made With GSAP effect 121, clipped sections gallery, for the first chapters
+              (photos come from Sanity → Site settings → About page photos). */}
+          <Effect121
+            hero={intro}
+            sections={CHAPTERS.slice(0, GALLERY_CHAPTERS).map((c, i) => ({
+              ...c,
+              // eslint-disable-next-line @next/next/no-img-element
+              media: <img src={`${photos[i].url}?w=1400&auto=format`} alt={photos[i].alt || ""} loading="lazy" decoding="async" />,
+            }))}
+          />
+          <ChapterList chapters={CHAPTERS.slice(GALLERY_CHAPTERS)} />
+        </>
       ) : (
         <>
           {intro}
-          <VelocityMarquee items={["Forty years", "Artist", "Teacher", "All art forms", "One roof", "Bengaluru"]} />
+          <VelocityMarquee items={["Artist", "Art educator", "Author", "5,000+ students", "National record holder"]} />
           <section aria-label="In short" className="shell py-24 md:py-32">
             <TextReveal className="aa-statement max-w-6xl" type="words" start="top 80%" stagger={0.035} duration={0.9}>
-              The studio is not built around a single medium. <strong>Painting, mandala, Nippon art</strong> and more are taught
-              and practised here, so a student can move between forms <strong>without changing teachers</strong>.
+              She has painted in oil, acrylic and mixed media, on canvas, paper and pottery. Her signature is{" "}
+              <strong>loose watercolour</strong>, and as an art educator she has passed it on, with much else, to{" "}
+              <strong>more than 5,000 students</strong>.
             </TextReveal>
           </section>
-          <section className="shell pb-10">
-            {CHAPTERS.map((c) => (
-              <Reveal key={c.title}>
-                <article className="grid gap-6 border-t border-line py-12 md:grid-cols-[0.8fr_1.2fr] md:gap-14 md:py-16">
-                  <h2 className="mega text-3xl md:text-5xl">{c.title}</h2>
-                  <div className="max-w-xl text-lg text-muted">{c.text}</div>
-                </article>
-              </Reveal>
-            ))}
-          </section>
+          <ChapterList chapters={CHAPTERS} />
         </>
       )}
 

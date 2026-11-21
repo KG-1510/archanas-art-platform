@@ -47,16 +47,24 @@ export function Loader() {
   return (
     <div
       aria-hidden="true"
-      className={`aa-loader fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-oxblood px-8 text-ivory transition-transform duration-[900ms] ease-[cubic-bezier(0.76,0,0.24,1)] ${phase === "lift" ? "-translate-y-full" : ""}`}
+      className={`aa-loader fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 overflow-hidden bg-oxblood-deep px-6 text-ivory transition-transform duration-[900ms] ease-[cubic-bezier(0.76,0,0.24,1)] ${phase === "lift" ? "-translate-y-full" : ""}`}
     >
-      <p className="font-display text-4xl md:text-6xl">
+      {/* Three soft pools of colour that drift and breathe behind the words. */}
+      <span className="aa-loader-glow aa-loader-glow-1" />
+      <span className="aa-loader-glow aa-loader-glow-2" />
+      <span className="aa-loader-glow aa-loader-glow-3" />
+      <span className="aa-loader-grain" />
+
+      <p className="aa-loader-in relative font-display text-5xl md:text-7xl">
         Archana&rsquo;s <em className="text-brass">Art</em>
       </p>
       {/* The bar */}
-      <div className="h-px w-full max-w-sm bg-ivory/25">
+      <div className="aa-loader-in relative h-px w-full max-w-sm bg-ivory/25" style={{ animationDelay: "120ms" }}>
         <div className="h-full origin-left bg-brass" style={{ transform: `scaleX(${n / 100})` }} />
       </div>
-      <p className="text-[0.75rem] font-medium uppercase tracking-[0.3em] text-ivory/70">Made slowly, by hand</p>
+      <p className="aa-loader-in relative whitespace-nowrap text-center text-[clamp(0.72rem,2.9vw,1.1rem)] text-ivory/85" style={{ animationDelay: "240ms" }}>
+        Welcome to the artistic world, created by Dr. Archana Gupta
+      </p>
     </div>
   );
 }

@@ -10,7 +10,7 @@ export function ArtistPortrait({ sizes, priority = false, className = "" }: { si
         <div className="relative aspect-[3/4] overflow-hidden">
           <Image
             src="/dr-archana-gupta.jpg"
-            alt={`${site.artist}, artist, teacher and author`}
+            alt={`${site.artist}, artist, art educator and author`}
             fill
             sizes={sizes}
             priority={priority}
@@ -20,7 +20,7 @@ export function ArtistPortrait({ sizes, priority = false, className = "" }: { si
       </ClipReveal>
       <figcaption className="mt-4 flex items-baseline justify-between gap-4 text-sm text-muted">
         <span className="font-display text-xl text-ink">{site.artist}</span>
-        <span>Artist, teacher, author</span>
+        <span>Artist, educator, author</span>
       </figcaption>
     </figure>
   );

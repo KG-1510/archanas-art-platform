@@ -18,7 +18,7 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PageIntro eyebrow="Contact" title="Visit, call, or send a message">
+      <PageIntro eyebrow="Contact" title="Come and say hello">
         <p>The quickest way to reach {site.artist} is WhatsApp.</p>
       </PageIntro>
 
