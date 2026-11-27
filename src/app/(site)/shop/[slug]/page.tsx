@@ -160,8 +160,28 @@ async function ArtworkDetail({ params }: { params: Promise<{ slug: string }> }) 
           </p>
         ) : null}
 
+        {artwork.vaastu ? (
+          <p
+            role="note"
+            className={`rise rise-4 flex gap-3 border border-purple-300 bg-purple-50 px-4 py-3 text-[0.95rem] leading-relaxed text-purple-950 ${artwork.hasGlass && hasOriginal ? "mt-3" : "mt-8"}`}
+          >
+            <svg viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 text-purple-700" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3.5 11 12 4l8.5 7" />
+              <path d="M5.5 9.5V20h13V9.5" />
+              <path d="M12 17.5c-1.9-1.2-3-2.5-3-3.9a1.6 1.6 0 0 1 3-.8 1.6 1.6 0 0 1 3 .8c0 1.4-1.1 2.7-3 3.9Z" />
+            </svg>
+            <span>
+              <strong className="font-medium">Good for Vaastu.</strong> This painting is in keeping with Vaastu Shastra, and is
+              chosen to bring balance and positive energy to your home, office or any other space it hangs in.
+            </span>
+          </p>
+        ) : null}
+
         {/* One buying panel: the original and the print as two rows, then help and payment notes. */}
-        <section aria-label="Buy this painting" className={`rise rise-4 border border-line ${artwork.hasGlass && hasOriginal ? "mt-5" : "mt-10"}`}>
+        <section
+          aria-label="Buy this painting"
+          className={`rise rise-4 border border-line ${(artwork.hasGlass && hasOriginal) || artwork.vaastu ? "mt-5" : "mt-10"}`}
+        >
           {hasOriginal ? (
             <div className="grid grid-cols-[1fr_auto_auto] items-center gap-x-4 px-4 py-3.5 sm:gap-x-5 sm:px-5">
               <div>

@@ -15,6 +15,8 @@ export type Artwork = {
   framedHeightIn?: number;
   /** The frame has glass, which is removed before the original is couriered. */
   hasGlass?: boolean;
+  /** The painting helps with Vaastu compliance. */
+  vaastu?: boolean;
   year?: number;
   description: string;
   imageUrl?: string;

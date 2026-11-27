@@ -5,7 +5,7 @@ import type { Artwork, Book, LegalPage, Photo, Service, SizedPhoto, ShippingRate
 
 // Field names on the website differ slightly from the studio's, so the mapping lives here.
 const ARTWORK_FIELDS = `_id, title, "slug": slug.current, category, medium, widthIn, heightIn,
-  "framed": framed == "framed", framedWidthIn, framedHeightIn, "hasGlass": framed == "framed" && hasGlass == true, year,
+  "framed": framed == "framed", framedWidthIn, framedHeightIn, "hasGlass": framed == "framed" && hasGlass == true, "vaastu": vaastu == true, year,
   "description": coalesce(description, ""),
   "imageUrl": image.asset->url, "imageAlt": image.alt, "imageAspect": image.asset->metadata.dimensions.aspectRatio,
   "gallery": coalesce(additionalImages[defined(asset)]{ "url": asset->url, alt }, []),

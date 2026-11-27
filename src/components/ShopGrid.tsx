@@ -61,6 +61,7 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
   const [f, setF] = useState(INITIAL);
   const [sort, setSort] = useState("name");
   const [open, setOpen] = useState(false); // search and filter sheet on phones
+  const [filtersOpen, setFiltersOpen] = useState(false); // filter row on larger screens, collapsed so paintings show first
   const set = (key: keyof typeof INITIAL, value: string) => setF((prev) => ({ ...prev, [key]: value }));
 
   const forms = useMemo(() => Array.from(new Set(artworks.map((a) => a.category).filter(Boolean))).sort(), [artworks]);
@@ -126,12 +127,20 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
         </svg>
         Search &amp; filter{active ? ` (${active})` : ""}
       </button>
-      {open ? <button type="button" aria-label="Close search and filters" onClick={() => setOpen(false)} className="fixed inset-0 z-[55] cursor-default bg-ink/45 md:hidden" /> : null}
+      {/* Always rendered so it can fade in and out; out of the way while the sheet is closed. */}
+      <button
+        type="button"
+        aria-label="Close search and filters"
+        aria-hidden={!open}
+        tabIndex={open ? 0 : -1}
+        onClick={() => setOpen(false)}
+        className={`fixed inset-0 z-[55] cursor-default bg-ink/45 transition-opacity duration-300 ease-out md:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      />
 
       <div
         id="shop-panel"
         data-lenis-prevent
-        className={`border border-line bg-surface p-5 md:block md:p-7 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-[60] max-md:max-h-[85dvh] max-md:overflow-y-auto max-md:border-x-0 max-md:border-b-0 max-md:shadow-2xl ${open ? "block" : "hidden"}`}
+        className={`border border-line bg-surface p-5 md:block md:px-5 md:py-2 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-[60] max-md:max-h-[85dvh] max-md:overflow-y-auto max-md:border-x-0 max-md:border-b-0 max-md:shadow-2xl max-md:transition-[translate,visibility] max-md:duration-[400ms] max-md:ease-[cubic-bezier(0.16,1,0.3,1)] ${open ? "max-md:translate-y-0" : "max-md:invisible max-md:translate-y-full"}`}
       >
         <div className="mb-6 flex items-center justify-between md:hidden">
           <p className="font-display text-2xl">Search and filter</p>
@@ -139,10 +148,11 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
             Close
           </button>
         </div>
-        <div className="flex flex-wrap items-end gap-x-6 gap-y-5">
+        {/* On larger screens: one slim strip, labels kept for screen readers only. */}
+        <div className="flex flex-wrap items-end gap-x-6 gap-y-5 md:flex-nowrap md:items-center">
           <label className="field min-w-0 flex-1 basis-72">
-            <span>Search the gallery</span>
-            <span className="flex items-center gap-3 border-b border-line focus-within:border-oxblood">
+            <span className="md:sr-only">Search the gallery</span>
+            <span className="flex items-center gap-3 border-b border-line focus-within:border-oxblood md:border-transparent">
               <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="6.5" />
                 <path d="m16 16 4.5 4.5" />
@@ -156,25 +166,45 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
               />
             </span>
           </label>
-          <label className="field basis-56 max-md:basis-full">
-            <span>Sort by</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              {SORTS.map((s) => (
+          <label className="field basis-56 max-md:basis-full md:shrink-0 md:basis-auto md:border-l md:border-line md:pl-6">
+            <span className="md:sr-only">Sort by</span>
+            <select value={sort} onChange={(e) => setSort(e.target.value)} className="md:!border-0 md:!pr-6">              {SORTS.map((s) => (
                 <option key={s.key} value={s.key}>
                   {s.label}
                 </option>
               ))}
             </select>
           </label>
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((v) => !v)}
+            aria-expanded={filtersOpen}
+            aria-controls="shop-filters"
+            className="inline-flex shrink-0 items-center gap-2 border-l border-line pl-6 text-[0.78rem] font-medium uppercase tracking-[0.18em] text-oxblood hover:text-ink max-md:hidden"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 7h16M7 12h10M10 17h4" />
+            </svg>
+            {filtersOpen ? "Hide filters" : "Filters"}
+            {active ? ` (${active})` : ""}
+          </button>
         </div>
 
-        <div id="shop-filters" className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-7 md:grid-cols-3 xl:grid-cols-6">
-          {select("Art form", "form", [{ key: "any", label: "All art forms" }, ...forms.map((x) => ({ key: x, label: x }))])}
-          {select("Medium", "medium", [{ key: "any", label: "Any medium" }, ...mediums.map((x) => ({ key: x, label: x }))])}
-          {select("Size", "size", SIZES)}
-          {select("Price", "price", PRICES)}
-          {select("Framing", "framing", FRAMING)}
-          {select("Available as", "availability", [...AVAILABILITY])}
+        {/* Larger screens: the row slides open and shut (grid rows 0fr ↔ 1fr). Phones: always open inside the sheet. */}
+        <div
+          id="shop-filters"
+          className={`grid transition-[grid-template-rows,opacity,visibility] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] max-md:grid-rows-[1fr] ${filtersOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] md:invisible md:opacity-0"}`}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-7 md:mt-2 md:mb-3 md:pt-4 md:grid-cols-3 xl:grid-cols-6">
+              {select("Art form", "form", [{ key: "any", label: "All art forms" }, ...forms.map((x) => ({ key: x, label: x }))])}
+              {select("Medium", "medium", [{ key: "any", label: "Any medium" }, ...mediums.map((x) => ({ key: x, label: x }))])}
+              {select("Size", "size", SIZES)}
+              {select("Price", "price", PRICES)}
+              {select("Framing", "framing", FRAMING)}
+              {select("Available as", "availability", [...AVAILABILITY])}
+            </div>
+          </div>
         </div>
         <div className="mt-7 flex items-center gap-5 md:hidden">
           <button type="button" onClick={() => setOpen(false)} className="btn flex-1">
@@ -188,7 +218,7 @@ export function ShopGrid({ artworks }: { artworks: Artwork[] }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap md:mt-7 items-center justify-between gap-4">
+      <div className="flex flex-wrap md:mt-4 items-center justify-between gap-4">
         <p role="status" className="text-sm text-muted">
           {shown.length === artworks.length
             ? `${shown.length} ${shown.length === 1 ? "work" : "works"}`

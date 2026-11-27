@@ -93,6 +93,7 @@ async function artwork(slug: string) {
     `- Size: ${formatSizeWithCm(a.widthIn, a.heightIn)}`,
     ...(a.framed && a.framedWidthIn && a.framedHeightIn ? [`- Size with frame: ${formatSizeWithCm(a.framedWidthIn, a.framedHeightIn)}`] : []),
     `- Framing: ${a.framed ? (a.hasGlass ? "framed behind glass (the glass is removed before the original is couriered)" : "framed") : "unframed"}`,
+    ...(a.vaastu ? ["- Vaastu compliant"] : []),
     ...(a.year ? [`- Year: ${a.year}`] : []),
     ...(typeof a.priceOriginalINR === "number"
       ? [`- Original: ${originalAvailable(a) ? `${formatINR(a.priceOriginalINR)}, available` : "sold"}`]

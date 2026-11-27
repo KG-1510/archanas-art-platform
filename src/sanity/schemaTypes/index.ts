@@ -85,6 +85,10 @@ const artwork = defineType({
       options: { list: ART_FORMS }, validation: (r) => r.required(),
     }),
     defineField({ name: "year", type: "number", group: "main", validation: (r) => r.integer().min(1950).max(2100) }),
+    defineField({
+      name: "vaastu", title: "Vaastu compliant", type: "boolean", group: "main", initialValue: false,
+      description: "Switch on if this painting helps with Vaastu compliance. The painting page then says so.",
+    }),
 
     // --- Size -----------------------------------------------------------------
     defineField({
