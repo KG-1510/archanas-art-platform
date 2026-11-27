@@ -149,9 +149,11 @@
   from { opacity: 0; transform: translateY(1.5rem); }
   to { opacity: 1; transform: none; }
 }
+/* Opacity and transform only: the GPU handles them, so a large photo arrives smoothly.
+   (An animated clip-path repainted the whole photo every frame and stuttered.) */
 @keyframes unveil {
-  from { clip-path: inset(0 0 100% 0); }
-  to { clip-path: inset(0 0 0 0); }
+  from { opacity: 0; transform: translate3d(0, 1.75rem, 0) scale(0.985); }
+  to { opacity: 1; transform: none; }
 }
 /* On a first visit the entrance waits for the loader curtain to lift (html[data-ready]). */
 html.js:not([data-ready]) .rise,
@@ -160,7 +162,7 @@ html.js:not([data-ready]) .unveil { animation-play-state: paused; }
 .rise-2 { animation-delay: 0.12s; }
 .rise-3 { animation-delay: 0.24s; }
 .rise-4 { animation-delay: 0.36s; }
-.unveil { animation: unveil 1.4s var(--ease-luxe) 0.2s both; }
+.unveil { animation: unveil 1.2s var(--ease-luxe) 0.15s both; }
 
 /* ------------------------------------------------------------------
    Made With GSAP effects (licensed, madewithgsap.com). Structural rules

@@ -17,7 +17,7 @@ export default async function ShopPage() {
 
   return (
     <>
-      <PageIntro eyebrow="The gallery" title="Find the painting that feels like yours">
+      <PageIntro compact eyebrow="The gallery" title="Find the painting that feels like yours">
         <p>Original paintings by {site.artist}, each one sold only once, and prints of selected works. Sent by courier across India and abroad.</p>
       </PageIntro>
 
